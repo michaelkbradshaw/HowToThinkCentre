@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>18. Sequence Algorithms &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="19. List Algorithms" href="list_algorithms.html" />
+    <link rel="prev" title="17. Files" href="files.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="list_algorithms.html" title="19. List Algorithms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="files.html" title="17. Files"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="sequence-algorithms">
+<span id="index-0"></span><h1>18. Sequence Algorithms<a class="headerlink" href="#sequence-algorithms" title="Permalink to this headline">¶</a></h1>
+<p>We&#8217;ve talked about a few algorithms so far.  IPO (Input Process Output) and the accumulator are the most common in everyday problem solving.  In this chapter we will talk about three more that form the remainder of the common algorithmic tools that every computer scientist needs to know.  All of these algorithms make use of sequences, for each loops, and are things that you instinctively know how to do.  In learning how to think like a computer scientist, you will need to identify those small steps that you took to solve these problems.</p>
+<div class="section" id="occurrence">
+<h2>18.1. Occurrence<a class="headerlink" href="#occurrence" title="Permalink to this headline">¶</a></h2>
+<p>Occurrence tests for the number of times something occurs within a sequence.  This could be how many a&#8217;s, how many numbers are divisible by 4 or how many rectangles contain a particular point.</p>
+<p>If we ask a person on the street how to determine how many occurrences happened, they will &#8221; look at all of elements and count up the number of occurrences&#8221;.  This is not quite accurate.  A computer scientist knows that you must look at <strong>each</strong> element and count up the occurrences.</p>
+<p>From the refined description, we see that we need two things: a for each loop and an accumulator.  Here is an example to find the number of <em>j&#8217;s</em> within a string.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">numJs</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns number of j&#39;s in word&quot;&quot;&quot;</span>
+    <span class="n">js</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">letter</span> <span class="o">==</span> <span class="s">&#39;j&#39;</span><span class="p">):</span>
+            <span class="n">js</span> <span class="o">=</span> <span class="n">js</span> <span class="o">+</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">js</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>A common variant is to return all of the occurrences in a list.  In this case, we simply need to make use of a list accumulator instead of an integer accumulator.  In the next example we will examine a list of strings and return all of the strings that have more than 8 letters.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">bigWords</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns list of strings from words that are big&quot;&quot;&quot;</span>
+    <span class="n">big</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">):</span>
+            <span class="n">big</span> <span class="o">=</span> <span class="n">big</span> <span class="o">+</span> <span class="p">[</span><span class="n">word</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">big</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="find">
+<h2>18.2. Find<a class="headerlink" href="#find" title="Permalink to this headline">¶</a></h2>
+<p>Our second algorithm is find.  We will look through a sequence and determine if a particular element is present.  There is a strong relationship to occurrence.  In fact we can solve the occurrence problem and reuse the solutions to solve the find problem.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">numJs</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns number of j&#39;s in word&quot;&quot;&quot;</span>
+    <span class="n">js</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">letter</span> <span class="o">==</span> <span class="s">&#39;j&#39;</span><span class="p">):</span>
+            <span class="n">js</span> <span class="o">=</span> <span class="n">js</span> <span class="o">+</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">js</span>
+
+<span class="k">def</span> <span class="nf">hasJ</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot; returns true if word has a j in it&quot;&quot;&quot;</span>
+   <span class="k">if</span><span class="p">(</span><span class="n">numJs</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+       <span class="k">return</span> <span class="k">True</span>
+   <span class="k">else</span><span class="p">:</span>
+       <span class="k">return</span> <span class="k">False</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Directly using the occurrence solutions is always correct but not efficient or elegant.  In the above problem we only wanted to know if a &#8216;j&#8217; was in the string.  If the first letter was a j, we would still have to search through every element before we could return an answer.  For this reason we will want to refine our answer.  Below is a bad implementation, it does not work.  Take a moment to figure out why.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">hasJ_BAD</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Incorrect implmentation&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">letter</span> <span class="o">==</span> <span class="s">&#39;j&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="k">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">False</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This is a very common error in implementing find.  However, there is a very serious error in this code.  I refer to it as the <strong>sock drawer fallacy</strong>.  Trace through the following psedocode to demonstrate the problem.  I am looking for a green sock in my sock drawer.  I look at the first sock and if it is green I am done, all is well.  However, if I follow the code given below, if the sock is not green I return immediately with my failure to find the green sock.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sockDrawer</span><span class="p">(</span><span class="n">socks</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;incorrectly looks for a sock&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">sock</span> <span class="ow">in</span> <span class="n">socks</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">sock</span><span class="o">.</span><span class="n">gtColor</span> <span class="o">==</span> <span class="n">GREEN</span> <span class="p">):</span>
+            <span class="k">return</span> <span class="s">&quot;I fond the Sock!&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;I couldn&#39;t find the Sock!&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>By having the else statement inside the for each loop, we give up too quickly.  We should only give up once we have looked at every sock.  The code below provides a proper implementation of the find algorithm.  We only return false when we have looked at all of the elements.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">hasJ</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot; returns true if word has a j in it&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">letter</span> <span class="o">==</span> <span class="s">&#39;j&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="k">True</span>
+    <span class="k">return</span> <span class="k">False</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Locate is a common variant of the find algorithm.  In Find we only want to know if the element is within the sequence.  Locate wants to know where that the item is.  To solve this we need an accumulator to keep track of the position we are investigating.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">locateJ</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot;returns index of j in word&quot;&quot;&quot;</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">letter</span> <span class="o">==</span> <span class="s">&#39;j&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pos</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span><span class="o">+</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="k">None</span> <span class="c">#don&#39;t return a number</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="maximum">
+<h2>18.3. Maximum<a class="headerlink" href="#maximum" title="Permalink to this headline">¶</a></h2>
+<p>Our final algorithm is the maximum algorithm.  This algorithm is something that people on the street can do easily, but very few people on the street can explain how they do it.  If you want to think like a computer scientist, you&#8217;ve got to be able to understand how you solve a problem.</p>
+<p>Examine the following sequence of numbers:</p>
+<blockquote>
+<div><cite>3 5 1 6 8 2 7 4</cite></div></blockquote>
+<p>A person off of the street will say that they looked at all the numbers and picked 8. This is the limit of what a non computer scientists can understand. There are a number of steps that had to take place to make this happen.  The first thing is that people and computers can&#8217;t look at more than one number at a time.  This means that we have to look at only one number at a time. So the better question is how are we finding the max if we can only look at one number at a time.</p>
+<p>The trick is to use a variable to store the largest number found so far.  As we examine each new number, we will reset the maximum only if the new number is the larger.  By the time we reach the end of the sequence, our stored maximum would be the maximum of the entire sequence.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">maxVal</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find largest value in List of nums&quot;&quot;&quot;</span>
+    <span class="n">largest</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c">#initialize largest to the first value in the list</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">largest</span> <span class="o">&lt;</span> <span class="n">num</span><span class="s">&#39;):</span>
+            <span class="n">largest</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="k">return</span> <span class="n">largest</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="glossary">
+<h2>18.4. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+</dl>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="list_algorithms.html" title="19. List Algorithms"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="files.html" title="17. Files"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

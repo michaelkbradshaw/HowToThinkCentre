@@ -1,0 +1,1020 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>11. Better Animation through Inheritance &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="12. Iteration" href="iteration.html" />
+    <link rel="prev" title="10. Classes and Objects - Digging a little deeper" href="classes_and_objects_II.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="iteration.html" title="12. Iteration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="classes_and_objects_II.html" title="10. Classes and Objects - Digging a little deeper"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="better-animation-through-inheritance">
+<h1>11. Better Animation through Inheritance<a class="headerlink" href="#better-animation-through-inheritance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="animation">
+<h2>11.1. Animation<a class="headerlink" href="#animation" title="Permalink to this headline">¶</a></h2>
+<p>Animation is a common technique that makes use of a biological phenomenon called <strong>persistence of vision</strong>.  This effect allows people to see a sequence of still images and perceive it as motion.  It forms the basis of how television, cartoons, and computer graphics can provide the illusion of motion.</p>
+<p>At its core, animation is a relatively simple process.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Draw a picture.</li>
+<li>Do nothing for a relatively short period of time (1/20th of a second or less)</li>
+<li>move the objects in your picture slightly.</li>
+<li>goto 1</li>
+</ol>
+</div></blockquote>
+<p>Below is a simple animation with a ball falling from the top of the screen.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">simpleAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;one ball falling on the surface, surf&quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">FILL_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">EDGE_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="c">#clear screen</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c">#draw the picture</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">FILL_COLOR</span><span class="p">,(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">EDGE_COLOR</span><span class="p">,(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span><span class="n">r</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="c">#put to screen</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c">#sleep till next picture</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+        <span class="c">#update for the next picture</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">+</span><span class="mi">4</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="n">simpleAnimation</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">();</span>
+
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>For relatively simple animations, a straight forward approach works well.  The animation magic happens in the for loop on line 12.  Line 14 clears the window by filling in a background color.  Lines 17-18 draw the circle.  Line 21 puts our master piece to the screen.  A call to <tt class="docutils literal"><span class="pre">time.sleep(.05)</span></tt> pauses the computer for one twentieth of a second before updating and drawing the next picture.</p>
+<p>More complex animations, like 3 falling objects, becomes more difficult to keep straight.</p>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">complexAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2 balls, and one box falling&quot;&quot;&quot;</span>
+
+    <span class="n">b1_x</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">b1_y</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">b1_r</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="n">b2_x</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">b2_y</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">b2_r</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">s_x</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">s_y</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="n">s_side</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">FILL_COLOR1</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">FILL_COLOR2</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">FILL_COLOR3</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+    <span class="n">EDGE_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="c">#clear picture</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c">#draw the picture</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">FILL_COLOR1</span><span class="p">,(</span><span class="n">b1_x</span><span class="p">,</span><span class="n">b1_y</span><span class="p">),</span><span class="n">b1_r</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">EDGE_COLOR</span><span class="p">,</span> <span class="p">(</span><span class="n">b1_x</span><span class="p">,</span><span class="n">b1_y</span><span class="p">),</span><span class="n">b1_r</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">FILL_COLOR2</span><span class="p">,(</span><span class="n">b2_x</span><span class="p">,</span><span class="n">b2_y</span><span class="p">),</span> <span class="n">b2_r</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">EDGE_COLOR</span> <span class="p">,(</span><span class="n">b2_x</span><span class="p">,</span><span class="n">b2_y</span><span class="p">),</span> <span class="n">b2_r</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span><span class="n">s_y</span><span class="p">,</span><span class="n">s_side</span><span class="p">,</span><span class="n">s_side</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">FILL_COLOR3</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">EDGE_COLOR</span><span class="p">,</span>  <span class="n">box</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c">#sleep till next picture</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+        <span class="c">#update for the next picture</span>
+        <span class="n">b1_y</span><span class="o">+=</span><span class="mi">4</span>
+        <span class="n">b2_y</span><span class="o">+=</span><span class="mi">4</span>
+        <span class="n">s_y</span><span class="o">+=</span><span class="mi">4</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="n">complexAnimation</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">();</span>
+
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>With only three objects the amount of data becomes unwieldy.  Imagine what would happen if we had 30, or even just 10 objects on the screen.  We need to develop a solution that allows us to work with lots of data and the related functions that operate on that data.  If you are thinking about using objects you are right!  Object are a perfect solution to this problem.</p>
+<p>We will create two graphics classes.  One for circles and one for squares.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># x - x coord for the center</span>
+    <span class="c"># y - y coord for the center</span>
+    <span class="c"># r - radius of the circle</span>
+    <span class="c"># fillColor - color of the fill</span>
+    <span class="c"># surf - surface to draw to</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">surf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">=</span><span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="o">=</span><span class="n">surf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object by dx,dy&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+=</span><span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+=</span><span class="n">dy</span>
+
+    <span class="k">def</span> <span class="nf">moveTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object to (x,y)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">getPos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets (x,y) position of the circle&quot;&quot;&quot;</span>
+        <span class="k">return</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the circle&#39;s radius&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">=</span><span class="n">radius</span>
+
+    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets the radius of the circle&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draws the object to the screen&quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+
+
+<span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># x - x coord for the upper Left</span>
+    <span class="c"># y - y coord for the upper Left</span>
+    <span class="c"># side - side of the square</span>
+    <span class="c"># fillColor - color of the fill</span>
+    <span class="c"># surf - surface to draw to</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">side</span><span class="p">,</span><span class="n">surf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">=</span><span class="n">side</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="o">=</span><span class="n">surf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object by dx,dy&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+=</span><span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+=</span><span class="n">dy</span>
+
+    <span class="k">def</span> <span class="nf">moveTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object to (x,y)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">getPos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets (x,y) position of the Upper Left corner of the square &quot;&quot;&quot;</span>
+        <span class="k">return</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setSide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">side</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the side of the Square&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">=</span><span class="n">side</span>
+
+    <span class="k">def</span> <span class="nf">getSide</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets the side of the square&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">self</span>
+
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draws the object to the screen&quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Armed with two classes we can now rewrite our animation in much more compact code.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">objectAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2 balls, and one box falling&quot;&quot;&quot;</span>
+
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">s</span>  <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="c">#clear picture</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c">#draw the picture</span>
+        <span class="n">b1</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">b2</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c">#sleep till next picture</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+        <span class="c">#update for the next picture</span>
+        <span class="n">b1</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">b2</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>One can observe that we have nearly tripled the amount of code needed to solve this problem.   So why is this better?  Two reasons.  We have increased the re-usability.  Just like functions, classes can be reused over and over.  The second reason is that while there is a lot of code, all of the code is in small easy to digest bits.  By keeping the code short and easy to understand, we are less likely to make mistakes.  However, if you are still worried by the amount of code, we will use a new technique in the next section to reduce the amount of code even further.</p>
+</div>
+<div class="section" id="inheritance">
+<h2>11.2. Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline">¶</a></h2>
+<p>The language feature most often associated with object-oriented programming is
+<strong>inheritance</strong>. Inheritance is the ability to define a new class that is a
+modified version of an existing class.</p>
+<p>The primary advantage of this feature is that you can add new methods to a
+class without modifying the existing class. It is called inheritance because
+the new class inherits all of the methods of the existing class. Extending this
+metaphor, the existing class is sometimes called the <strong>parent</strong> class. The new
+class may be called the <strong>child</strong> class or sometimes subclass.</p>
+<p>Inheritance is a powerful feature. Some programs that would be complicated
+without inheritance can be written concisely and simply with it. Also,
+inheritance can facilitate code reuse, since you can customize the behavior of
+parent classes without having to modify them. In some cases, the inheritance
+structure reflects the natural structure of the problem, which makes the
+program easier to understand.</p>
+<p>On the other hand, inheritance can make programs difficult to read.  When a
+method is invoked, it is sometimes not clear where to find its definition. The
+relevant code may be scattered among several modules.  Also, many of the things
+that can be done using inheritance can be done as elegantly (or more so)
+without it. If the natural structure of the problem does not lend itself to
+inheritance, this style of programming can do more harm than good.</p>
+</div>
+<div class="section" id="a-graphics-object">
+<h2>11.3. A Graphics Object<a class="headerlink" href="#a-graphics-object" title="Permalink to this headline">¶</a></h2>
+<p>Take a moment to recall the <tt class="docutils literal"><span class="pre">Circle</span></tt> and <tt class="docutils literal"><span class="pre">Square</span></tt> classes that we created in the previous section.  These two classes share a lot of common features: a position, colors, and a set of methods to alter the data.  We will use these commonalities to create our base class for all of the graphics objects that we will need for the rest of the semester.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Graphic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># x - x coord for the center</span>
+    <span class="c"># y - y coord for the center</span>
+    <span class="c"># fillColor - color of the fill</span>
+    <span class="c"># edgeColor - color of the edge</span>
+    <span class="c"># surf - surface to draw to</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">surf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="o">=</span><span class="n">surf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object by dx,dy&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+=</span><span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+=</span><span class="n">dy</span>
+
+    <span class="k">def</span> <span class="nf">moveTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object to (x,y)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">getPos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets (x,y) position of the circle&quot;&quot;&quot;</span>
+        <span class="k">return</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draws the object to the screen&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>One oddity is the <tt class="docutils literal"><span class="pre">draw()</span></tt> method.  We want all graphic objects to be able to draw, but this base class does not know how to draw all of the different shapes.  The <tt class="docutils literal"><span class="pre">draw()</span></tt> method is empty, <tt class="docutils literal"><span class="pre">pass</span></tt> is a keyword that says there is nothing in the function body.</p>
+</div>
+<div class="section" id="creating-children">
+<h2>11.4. Creating Children<a class="headerlink" href="#creating-children" title="Permalink to this headline">¶</a></h2>
+<p>With all of the common elements in a base class, we can now create classes that inherit from <tt class="docutils literal"><span class="pre">Graphic</span></tt>.</p>
+<p>In the class definition, the name of the parent class appears in parentheses:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="n">Graphic</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This statement indicates that the new <tt class="docutils literal"><span class="pre">Circle</span></tt> class inherits from the existing
+<tt class="docutils literal"><span class="pre">Graphic</span></tt> class.  This means that the Circle class will effectively be a Graphic class.  Anything that a <tt class="docutils literal"><span class="pre">Graphic</span></tt> can do a <tt class="docutils literal"><span class="pre">Circle</span></tt> can do.  Any data that a <tt class="docutils literal"><span class="pre">Graphic</span></tt> has, the <tt class="docutils literal"><span class="pre">Circle</span></tt> would have as well.</p>
+<p>When the base class has a constructor that takes no parameters other than <tt class="docutils literal"><span class="pre">self</span></tt>, we do not need to do anything else.  However, when the init method has parameters, it is the responsibility of the child class to pass these parameters to their parent class.  This is done in line 5 below.  The remaining methods are class specific, such as <tt class="docutils literal"><span class="pre">getReadius()</span></tt> and <tt class="docutils literal"><span class="pre">setRadius()</span></tt>, or overriding the base class&#8217;s methods such as <tt class="docutils literal"><span class="pre">draw()</span></tt>.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="n">Graphic</span><span class="p">):</span>
+    <span class="c"># r - radius of the circle</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">surf</span><span class="p">):</span>
+        <span class="n">Graphic</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">=</span><span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">setRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">radius</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the circles radius&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">=</span><span class="n">radius</span>
+
+    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets the radius of the circle&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c">#override</span>
+        <span class="sd">&quot;&quot;&quot; draws the object to the screen&quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Creating a square class that that extends from Graphic can be done in a similar fashion. This is left as an exercise for the reader.  We can use the same objectAnimation code we used before.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">objectAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2 balls, and one box falling&quot;&quot;&quot;</span>
+
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">s</span>  <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="c">#clear picture</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c">#draw the picture</span>
+        <span class="n">b1</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">b2</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c">#sleep till next picture</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+        <span class="c">#update for the next picture</span>
+        <span class="n">b1</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">b2</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="other-benefits-of-inheritance">
+<h2>11.5. Other benefits of Inheritance<a class="headerlink" href="#other-benefits-of-inheritance" title="Permalink to this headline">¶</a></h2>
+<p>There are other benefits of using inheritance.  In this section we will extend our code to offer two new improvements that are made possible by the use of inheritance.</p>
+<div class="section" id="polymorphism">
+<h3>11.5.1. Polymorphism<a class="headerlink" href="#polymorphism" title="Permalink to this headline">¶</a></h3>
+<p>Polymorphism is the third property of object oriented programming.  When done properly it doesn&#8217;t draw much attention.  Recall that we created a <tt class="docutils literal"><span class="pre">draw</span></tt> method in the Graphic class to draw.  Each child class overrode the draw method to suit its own purpose.  Polymorphism means when we call the draw function on a Graphic object, the correct version of <tt class="docutils literal"><span class="pre">draw</span></tt> will be called.</p>
+<p>In the following code, we will take advantage of polymorphism by placing all of the graphic objects in a list and using a for loop to perform the draw and update commands.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">objectAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2 balls, and one box falling&quot;&quot;&quot;</span>
+
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">surf</span><span class="p">)</span>
+
+    <span class="n">objs</span><span class="o">=</span><span class="p">[</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">,</span><span class="n">s</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="c">#clear picture</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c">#draw the pictures</span>
+        <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c">#sleep till next picture</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+        <span class="c">#update for the next picture</span>
+        <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The use of for each loop means that once the list has been created, the bulk of the code will be unchanged.  We will create a function that will supply random objects for us to drop from the sky.  Since this function is random, we don&#8217;t know what type of thing is coming out of it.  That is OK.  Each object returned is a graphic object (remember child objects are considered to be instances of thier parent&#8217;s class).  Since we only call <tt class="docutils literal"><span class="pre">draw()</span></tt> and <tt class="docutils literal"><span class="pre">moveBy()</span></tt> methods, which are part of graphic object, we don&#8217;t need to know exactly what type we are working with. Polymorphism will insure that the calls are done correctly.</p>
+<p>Below is the new code.  I&#8217;ve added some randomness to the movement as well to provide more interesting animation.  If you are running this code yourself, be sure to implement the square class and include it in your code.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">def</span> <span class="nf">randomGraphicObject</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">widthMin</span><span class="p">,</span><span class="n">widthMax</span><span class="p">,</span>\
+                        <span class="n">heightMin</span><span class="p">,</span><span class="n">heightMax</span><span class="p">,</span> <span class="n">dimMax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       create a graphics object at random within</span>
+<span class="sd">       the width and height parameter.  Each object</span>
+<span class="sd">       will use dimMax as a clue on how big the object should be</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">t</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c">#what type of thing?</span>
+    <span class="n">x</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">widthMin</span><span class="p">,</span><span class="n">widthMax</span><span class="p">)</span>
+    <span class="n">y</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">heightMin</span><span class="p">,</span><span class="n">heightMax</span><span class="p">)</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">dimMax</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">dimMax</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">surface</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">surface</span><span class="p">)</span>
+
+
+
+
+<span class="k">def</span> <span class="nf">objectAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2 balls, and one box falling&quot;&quot;&quot;</span>
+
+    <span class="n">objs</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">ob</span> <span class="o">=</span> <span class="n">randomGraphicObject</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+        <span class="n">objs</span><span class="o">=</span><span class="n">objs</span><span class="o">+</span><span class="p">[</span><span class="n">ob</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+        <span class="c">#clear picture</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c">#draw the pictures</span>
+        <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c">#sleep till next picture</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+        <span class="c">#update for the next picture</span>
+        <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<img alt="Circles and Squares falling" src="_images/fallingAnimate.png" />
+</div></blockquote>
+</div>
+<div class="section" id="enhancing-base-class">
+<h3>11.5.2. Enhancing Base Class<a class="headerlink" href="#enhancing-base-class" title="Permalink to this headline">¶</a></h3>
+<p>An additional benefit of inheritance is that all updates to the parent class will be available to the child classes.  After reviewing our Graphic class, I noticed that we have no way to retrieve or alter the colors used in our object.  If we were working with separate classes, we would need to copy this code into each class we had created.  With inheritance, we only need to update the parent class and all of the child classes will gain the benefits of the updates.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Graphic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># x - x coord for the center</span>
+    <span class="c"># y - y coord for the center</span>
+    <span class="c"># fillColor - color of the fill</span>
+    <span class="c"># edgeColor - color of the edge</span>
+    <span class="c"># surf - surface to draw to</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">surf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surf</span><span class="o">=</span><span class="n">surf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object by dx,dy&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+=</span><span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+=</span><span class="n">dy</span>
+
+    <span class="k">def</span> <span class="nf">moveTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Moves object to (x,y)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">getPos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets (x,y) position of the circle&quot;&quot;&quot;</span>
+        <span class="k">return</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draws the object to the screen&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="c">#new methods here</span>
+
+    <span class="k">def</span> <span class="nf">setFillColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets the fill color &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">def</span> <span class="nf">getFillColor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets the fill color &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fillColor</span>
+
+    <span class="k">def</span> <span class="nf">setEdgeColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets the edge color &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">def</span> <span class="nf">getEdgeColor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; gets the edge color &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">edgeColor</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="glossary">
+<h2>11.6. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-inheritance">inheritance</dt>
+<dd>The ability to define a new class that is a modified version of a
+previously defined class.</dd>
+<dt id="term-parent-class">parent class</dt>
+<dd>The class from which a child class inherits.</dd>
+<dt id="term-child-class">child class</dt>
+<dd>A new class created by inheriting from an existing class; also called a
+subclass.</dd>
+</dl>
+</div>
+<div class="section" id="exercises">
+<h2>11.7. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="iteration.html" title="12. Iteration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="classes_and_objects_II.html" title="10. Classes and Objects - Digging a little deeper"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

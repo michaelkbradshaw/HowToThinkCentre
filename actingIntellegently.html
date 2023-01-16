@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>21. Acting Intelligently &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="22. PyGame" href="pygame.html" />
+    <link rel="prev" title="20. Indefinite Loops" href="indefiniteLoop.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pygame.html" title="22. PyGame"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="indefiniteLoop.html" title="20. Indefinite Loops"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="acting-intelligently">
+<h1>21. Acting Intelligently<a class="headerlink" href="#acting-intelligently" title="Permalink to this headline">¶</a></h1>
+<p>In creating games and simulations we have to include the ability for objects to behave independently.  Lets revisit our program from Chapter 11 that created a variety of random graphic objects floating across the screen.  If you are fuzzy on how we created graphics objects, you should revisit chapter 11 before continuing.</p>
+<blockquote>
+<div><img alt="Circles and Squares falling" src="_images/fallingAnimate.png" />
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre></div></td><td class="code"><div class="highlight"><pre> <span class="kn">import</span> <span class="nn">random</span>
+
+ <span class="k">def</span> <span class="nf">randomGraphicObject</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">widthMin</span><span class="p">,</span><span class="n">widthMax</span><span class="p">,</span>\
+                         <span class="n">heightMin</span><span class="p">,</span><span class="n">heightMax</span><span class="p">,</span> <span class="n">dimMax</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        create a graphics object at random within</span>
+<span class="sd">        the width and height parameter.  Each object</span>
+<span class="sd">        will use dimMax as a clue on how big the object should be</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+
+     <span class="n">t</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c">#what type of thing?</span>
+     <span class="n">x</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">widthMin</span><span class="p">,</span><span class="n">widthMax</span><span class="p">)</span>
+     <span class="n">y</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">heightMin</span><span class="p">,</span><span class="n">heightMax</span><span class="p">)</span>
+     <span class="n">dim</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">dimMax</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">dimMax</span><span class="p">)</span>
+
+     <span class="k">if</span><span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">surface</span><span class="p">)</span>
+     <span class="k">else</span><span class="p">:</span>
+         <span class="k">return</span> <span class="n">Square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">surface</span><span class="p">)</span>
+
+
+
+
+ <span class="k">def</span> <span class="nf">objectAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;&quot;Many objects moving around&quot;&quot;&quot;</span><span class="s">&quot;</span>
+
+     <span class="n">objs</span> <span class="o">=</span><span class="p">[]</span>
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+         <span class="n">ob</span> <span class="o">=</span> <span class="n">randomGraphicObject</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+         <span class="n">objs</span><span class="o">=</span><span class="n">objs</span><span class="o">+</span><span class="p">[</span><span class="n">ob</span><span class="p">]</span>
+
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+         <span class="c">#clear picture</span>
+         <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+         <span class="c">#draw the pictures</span>
+         <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+             <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+         <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+         <span class="c">#sleep till next picture</span>
+         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+         <span class="c">#update for the next picture</span>
+         <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+             <span class="n">graph</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="n">objectAnimation</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">();</span>
+
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In the above code, all of the object move in the same direction.  What if we needed to create objects that each move in their own direction?  Presently all movement is controlled in the lines 46-47.  We could hard code how each object moved but that would be come very difficult to write as we would need a new line of code for each object.</p>
+<p>What we should do for each object is store the direction the object should travel and ask the the objects to move themselves.  The concept of an object that knows how to draw itself and how to react to its environment brings us to Sprites.</p>
+<div class="section" id="sprites">
+<h2>21.1. Sprites<a class="headerlink" href="#sprites" title="Permalink to this headline">¶</a></h2>
+<p>A sprite is an object that can move about in a game,
+and has internal behavior and state of its own.  For example,
+a spaceship would be a sprite, the player would be a sprite,
+and bullets and bombs would all be sprites.</p>
+<p>Object oriented programming (OOP) is ideally suited to a
+situation like this: each object can have its own attributes
+and internal state, and a couple of methods.  All sprites will need at least three methods.</p>
+<ul class="simple">
+<li>Sprites need to initialize their variables.  Like all objects there needs to be a mechanism to tell the sprite how to set its initial values.</li>
+<li>Sprites need to draw themselves when asked.  Games and animation are closely related.  Each frame of the game requires that we redraw the screen.</li>
+<li>Sprites need to update their state.  This is a new concept.  In our simple example this function will move the object in the direction it selected for itself.  In a more complex sprite, this function would calculate how the sprite reacts to the environment and where the sprite should move.</li>
+</ul>
+<p>We have some choices on how to implement a Sprite.  If we created each sprite as its own object, we would not gain any benefit from the work that we have already done.  We really want to reuse the graphic objects we created before to avoid work.  One apporach is to use inheritance. With inheritance we would need to create a child class for Circle and a child class for Square.  If we only sprites for Circles and Squares this might be an appropriate choice.  However, if we had 8 separate graphic objects, we would need 8 subclasses.</p>
+<p>In this situation, inheritance is probably overkill. A better technique is to use composition.  Composition simply means that the new class will have a variable to store the previous class instead of using inheritance.  In our case the sprite will have a graphics object as a data member.  Our sprite will simply give commands to its graphic object in order to solve problems.  This means we will only need to create one sprite class for any number of graphic objects that we might want to use.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96</pre></div></td><td class="code"><div class="highlight"><pre> <span class="kn">import</span> <span class="nn">random</span>
+ <span class="k">class</span> <span class="nc">Sprite</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+      <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;draws sprite to the screen&quot;&quot;&quot;</span>
+         <span class="k">pass</span>
+
+      <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;updates the state of the sprite&quot;&quot;&quot;</span>
+         <span class="k">pass</span>
+
+
+ <span class="k">class</span> <span class="nc">WanderingSprite</span><span class="p">(</span><span class="n">Sprite</span><span class="p">):</span>
+ <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    sprite that starts at an initial position</span>
+<span class="sd">    and &#39;walks&#39; in one direction.</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+           <span class="c">#avoid objects that don&#39;t move at all</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c">#override</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draw sprite to screen &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="c">#override</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; updates the state of the sprite &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+
+ <span class="k">def</span> <span class="nf">randomGraphicObject</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">widthMin</span><span class="p">,</span><span class="n">widthMax</span><span class="p">,</span>\
+                         <span class="n">heightMin</span><span class="p">,</span><span class="n">heightMax</span><span class="p">,</span> <span class="n">dimMax</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        create a graphics object at random within</span>
+<span class="sd">        the width and height parameter.  Each object</span>
+<span class="sd">        will use dimMax as a clue on how big the object should be</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+
+     <span class="n">t</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c">#what type of thing?</span>
+     <span class="n">x</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">widthMin</span><span class="p">,</span><span class="n">widthMax</span><span class="p">)</span>
+     <span class="n">y</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">heightMin</span><span class="p">,</span><span class="n">heightMax</span><span class="p">)</span>
+     <span class="n">dim</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">dimMax</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">dimMax</span><span class="p">)</span>
+
+     <span class="k">if</span><span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">surface</span><span class="p">)</span>
+     <span class="k">else</span><span class="p">:</span>
+         <span class="k">return</span> <span class="n">Square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">surface</span><span class="p">)</span>
+
+
+
+
+ <span class="k">def</span> <span class="nf">spriteAnimation</span><span class="p">(</span><span class="n">surf</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;&quot;Many objects moving around&quot;&quot;&quot;</span><span class="s">&quot;</span>
+
+     <span class="n">objs</span> <span class="o">=</span><span class="p">[]</span>
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+         <span class="n">ob</span> <span class="o">=</span> <span class="n">randomGraphicObject</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+         <span class="n">sprite</span> <span class="o">=</span> <span class="n">WanderingSprite</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+         <span class="n">objs</span><span class="o">=</span><span class="n">objs</span><span class="o">+</span><span class="p">[</span><span class="n">sprite</span><span class="p">]</span>
+
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+         <span class="c">#clear picture</span>
+         <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+         <span class="c">#draw the pictures</span>
+         <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+             <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+         <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+         <span class="c">#sleep till next picture</span>
+         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+         <span class="c">#update for the next picture</span>
+         <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+             <span class="n">graph</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="n">spriteAnimation</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">();</span>
+
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="timers">
+<h2>21.2. Timers<a class="headerlink" href="#timers" title="Permalink to this headline">¶</a></h2>
+<p>Our sprite class creates a much more complex animation without cluttering the main loop of the animation.  Let&#8217;s add some more additions to create an even more interesting effect.  What if we wanted the sprites to change directions?  Below is a common first pass at creating random movement by changing the update method.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; updates the state of the sprite &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This will introduce random movement, but it will not be the movement we had in mind.  It creates an effect that looks like the objects are rapidly vibrating.  If we want to create a better effect of random movement we need to insure that the movement lasts for a small period of time before the sprite switches direction.</p>
+<p>We can accomplish through the use of an accumulator. We&#8217;ll call this accumulator <cite>countdown</cite>.  In this case <cite>countdown</cite> is set to a random number that represents how many frames the sprite will travel before changing direction.  Inside the update, sprite will decrement <cite>countdown</cite> by one.  Once <cite>countdown</cite> reaches 0, a new direction is selected and the <cite>countdown</cite> timer is reset.  The delay in picking a new direction, creates the illusion of purpose and sells off the random movement.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WanderingSprite2</span><span class="p">(</span><span class="n">Sprite</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sprite that starts at an initial position</span>
+<span class="sd">   and &#39;walks&#39; in one direction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setRandomDirection</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_setRandomDirection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countdown</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+            <span class="c">#avoid objects that don&#39;t move at all</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+    <span class="c">#override</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; draw sprite to screen &quot;&quot;&quot;</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="c">#override</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; updates the state of the sprite &quot;&quot;&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">countdown</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setRandomDirection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">countdown</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="reacting-to-the-environment">
+<h2>21.3. Reacting to the environment<a class="headerlink" href="#reacting-to-the-environment" title="Permalink to this headline">¶</a></h2>
+<p>So far our sprites have been oblivious to their surroundings.  In this section we will work towards creating sprites that react to the other objects within the world.  Like many large problems we need to carefully dissect it and find out what the parts of the problem are.</p>
+<p>Let&#8217;s work on the Bomb game.  In this GAME the player moves a CHARACTER on the screen (a green circle) using keyboard commands.  The player must avoid BOMBS.  If a PLAYER touches a BOMB the GAME is over.  The BOMBS move around the screen in a random manner.</p>
+<p>Overlook the fact that this is a bad game.  There is no win condition, and we have not indicated how the challenge level will increase over time.  Sometimes a simple game is the best one to learn from.  The first thing we should look at is what objects are present in our game description. One trick is to look for the nouns.  We have capitalized the important nouns to make it easier to see.  The bombs and character are the easiest nouns to see. Choosing to make game an object is a common technique to keep the data from getting too difficult to follow.  If there was more than one player, we might also select that as an object to implement.</p>
+<p>Once we have selected the objects in the game, we know what we need to create.  The player is just a circle graphics object.  We can reuse what we have created before.  The Bomb is an object that needs to know
+if the player has hit it.  (You could do this the other way around, the player needs to know if it has hit a bomb. As we already need to add logic to the bombs it seems like a good idea to do the collision logic in bombs as well.)  The wandering aspect of the Bomb can be handled by using inheritance from the WanderingSprite we created in the last section.  The Game object will be used to run the game loop and provide a nice way to let the objects in the game find each other.</p>
+<div class="section" id="bomb-class">
+<h3>21.3.1. Bomb Class<a class="headerlink" href="#bomb-class" title="Permalink to this headline">¶</a></h3>
+<p>Our bomb class inherits from the wandering sprite we created at the beginning of the section.  There are two tricks to make this work.  First we pass the <cite>BombGame</cite> object as a parameter to the Bomb.  Whenever Bomb needs to know something about the game world, bomb can ask the game object.  Second, in update the bomb object determines if it has hit the player (retrieved from the game object) and will call endgame if it has.  Otherwise, the Bomb will use its parent&#8217;s update to roam around the screen.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Bomb</span><span class="p">(</span><span class="n">WanderingSprite</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">game</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">20</span><span class="p">,</span><span class="n">game</span><span class="o">.</span><span class="n">getSurf</span><span class="p">())</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setFillColor</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">WanderingSprite</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c">#check if you hit the player</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">getPlayer</span><span class="p">()</span>
+        <span class="n">playerpos</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getPos</span><span class="p">()</span>
+        <span class="n">myPos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">getPos</span><span class="p">()</span> <span class="c">#stored by parent</span>
+
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">playerpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">myPos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">playerpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">myPos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**.</span><span class="mi">5</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="p">):</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">endGame</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Bomb</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="bombgame-class">
+<h3>21.3.2. BombGame Class<a class="headerlink" href="#bombgame-class" title="Permalink to this headline">¶</a></h3>
+<p>The BombGame class handles the actual game.  The constructor creates the surface, bombs and player objects that are needed for the game.  Note the clever way in which the bomb constructor is called.  Remember that the bomb need the game object.  We can do that by passing self.  When we are in the BombGame class code, self is a BombGame object.</p>
+<p>There are several getters and setters to ensure that the bomb object can get all of the information it needs and to alter the game itself.  These were added as we discovered that bomb needed to get information from or send new instructions to the game.</p>
+<p>The last primary method is <cite>playGame</cite>.  This implements a common game loop.  Large pieces of code were moved to <cite>draw</cite> and <cite>handleKeyBoardInput()</cite> to keep the code easy to read.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</pre></div></td><td class="code"><div class="highlight"><pre> <span class="k">class</span> <span class="nc">BombGame</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">numBombs</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">win</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span> <span class="p">)</span>
+
+         <span class="bp">self</span><span class="o">.</span><span class="n">bombs</span> <span class="o">=</span> <span class="p">[]</span>
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numBombs</span><span class="p">):</span>
+             <span class="n">pos</span> <span class="o">=</span><span class="p">(</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span> <span class="p">)</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">bombs</span> <span class="o">+=</span> <span class="p">[</span> <span class="n">Bomb</span><span class="p">(</span> <span class="n">pos</span><span class="p">,</span><span class="bp">self</span> <span class="p">)</span> <span class="p">]</span>
+
+         <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span> <span class="p">)</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">win</span><span class="p">)</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">setFillColor</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+         <span class="bp">self</span><span class="o">.</span><span class="n">runGame</span> <span class="o">=</span> <span class="k">True</span>
+
+     <span class="k">def</span> <span class="nf">getPlayer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span>
+
+     <span class="k">def</span> <span class="nf">getSurf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">win</span>
+
+     <span class="k">def</span> <span class="nf">endGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">runGame</span><span class="o">=</span><span class="k">False</span>
+
+     <span class="k">def</span> <span class="nf">handleKeyBoardInput</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">pump</span><span class="p">()</span>
+         <span class="n">key</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
+
+         <span class="k">if</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_q</span><span class="p">]):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">endGame</span><span class="p">()</span>
+         <span class="k">elif</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_UP</span><span class="p">]):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+         <span class="k">elif</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_LEFT</span><span class="p">]):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+         <span class="k">elif</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_DOWN</span><span class="p">]):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+         <span class="k">elif</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_RIGHT</span><span class="p">]):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+
+
+     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+         <span class="c">#clear picture</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">win</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">)</span>
+
+         <span class="c">#draw the pictures</span>
+
+         <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bombs</span><span class="p">:</span>
+             <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+         <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+         <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+
+     <span class="k">def</span> <span class="nf">playGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+         <span class="k">while</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runGame</span><span class="p">):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">handleKeyBoardInput</span><span class="p">()</span>
+
+             <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+             <span class="c">#sleep till next picture</span>
+             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+
+             <span class="c">#update for the next picture</span>
+             <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bombs</span><span class="p">:</span>
+                 <span class="n">graph</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+         <span class="nb">print</span> <span class="s">&quot;You got Hit&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="one-last-touch">
+<h2>21.4. One last touch<a class="headerlink" href="#one-last-touch" title="Permalink to this headline">¶</a></h2>
+<p>Our present game is a good start.  However, the Bombs leave the screen and tend not to return.  This means if you can survive the beginning moments of the game, the difficulty quickly drops off.  Since the movement code is in the WanderingSprite class, that is where we should fix it.</p>
+<p>Inside the update, we use an if statement to determine if the sprite has left the screen.  The next thing we do is correct for leaving the screen by calling <cite>moveBy</cite> in the opposite direction.  Finally we call <cite>_setRandomDirection()</cite> to alter the direction we will move next frame.  The result is a fairly entertaining game.  Try to think how we could expand it to add bombs over time.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WanderingSprite</span><span class="p">(</span><span class="n">Sprite</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sprite that starts at an initial position</span>
+<span class="sd">   and &#39;walks&#39; in one direction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setRandomDirection</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_setRandomDirection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countdown</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+            <span class="c">#avoid objects that don&#39;t move at all</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c">#override</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; draw sprite to screen &quot;&quot;&quot;</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="c">#override</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; updates the state of the sprite &quot;&quot;&quot;</span>
+            <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">countdown</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_setRandomDirection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">countdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">countdown</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">getPos</span><span class="p">()</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">400</span> <span class="ow">or</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">400</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">moveBy</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_setRandomDirection</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="glossary">
+<h2>21.5. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="pygame.html" title="22. PyGame"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="indefiniteLoop.html" title="20. Indefinite Loops"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

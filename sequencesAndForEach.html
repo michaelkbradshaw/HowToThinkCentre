@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. Sequence and For Each Loops &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="8. Iteration" href="accumulatorsAndCountingLoops.html" />
+    <link rel="prev" title="6. Recursion and the Fractal Secrets of the World" href="introRecursion.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="accumulatorsAndCountingLoops.html" title="8. Iteration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introRecursion.html" title="6. Recursion and the Fractal Secrets of the World"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="sequence-and-for-each-loops">
+<h1>7. Sequence and For Each Loops<a class="headerlink" href="#sequence-and-for-each-loops" title="Permalink to this headline">¶</a></h1>
+<p id="index-0">It is time to take a closer look at some of the data types we have been using this semester.  Strings, tuples, and lists are all  subclasses of a type called a sequence.  A sequence has two properties:</p>
+<ol class="arabic simple">
+<li>A sequence is a compound object that contains several elements of data.</li>
+<li>The elements in a sequence are ordered, one comes after another.</li>
+</ol>
+<p>We are most familiar with strings.  A string is a sequence of characters.  In this case, the characters are the elements of the sequence.  We know that the order matters since reordering a string makes it a fundamentally different string.</p>
+<p>We have seen tuples used to pass data to pygame functions.  Tuples are a sequence of values.  They can have anything for elements, even other tuples.</p>
+<p>Lists are an important data type that we have not used yet.  Lists and tuples are very similar with two exceptions.  List are created using <tt class="docutils literal"><span class="pre">[</span> <span class="pre">]</span></tt> while tuples are usually created with <tt class="docutils literal"><span class="pre">(</span> <span class="pre">)</span></tt>.  Lists are mutable, while tuples are not.  This means that a list can be changed over time, while a tuple cannot.</p>
+<p>In the rest of this chapter we will focus on the things that can be done with <em>any</em> sequence.  If you see an example done with a string, rest assured that it will work with lists and tuples as well.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="19%" />
+<col width="36%" />
+<col width="21%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Sequence Type</th>
+<th class="head">Holds</th>
+<th class="head">Created with</th>
+<th class="head">Mutable</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>String</td>
+<td>characters</td>
+<td><tt class="docutils literal"><span class="pre">'</span> <span class="pre">'</span></tt> or <tt class="docutils literal"><span class="pre">&quot;</span> <span class="pre">&quot;</span></tt></td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Tuple</td>
+<td>anything</td>
+<td>usually <tt class="docutils literal"><span class="pre">(</span> <span class="pre">)</span></tt></td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>List</td>
+<td>anything</td>
+<td><tt class="docutils literal"><span class="pre">[</span> <span class="pre">]</span></tt></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sVar</span> <span class="o">=</span> <span class="s">&quot;string of chars&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tVar</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tVar2</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lVar</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="section" id="accessing-individual-elements-indexing">
+<h2>7.1. Accessing individual Elements: Indexing<a class="headerlink" href="#accessing-individual-elements-indexing" title="Permalink to this headline">¶</a></h2>
+<p>Indexing is the act of selecting a single element from a sequence.
+Python uses square brackets for the <strong>indexing operator</strong> which surround the position of the element you want to return.  Notice in the following example that the indexing operator occurs at the end of the sequence variable or value.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fruit</span> <span class="o">=</span> <span class="s">&quot;banana&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">fruit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The expression <tt class="docutils literal"><span class="pre">fruit[1]</span></tt> selects character position 1 from <tt class="docutils literal"><span class="pre">fruit</span></tt>, and creates a new string containing just this one character. The variable <tt class="docutils literal"><span class="pre">m</span></tt> refers to the result. When we display <tt class="docutils literal"><span class="pre">m</span></tt>, we could get a surprise:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">a</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Computer scientists always start counting
+from zero!</strong> The letter at subscript position zero of <tt class="docutils literal"><span class="pre">&quot;banana&quot;</span></tt> is <tt class="docutils literal"><span class="pre">b</span></tt>.  So at
+position <tt class="docutils literal"><span class="pre">[1]</span></tt> we have the letter <tt class="docutils literal"><span class="pre">a</span></tt>.</p>
+<p>If you want the zero-th letter of a string, you just put 0, or any expression
+with the value 0, in the brackets:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">fruit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">b</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The expression in brackets is called an <strong>index</strong>. An index specifies a member
+of an ordered collection, in this case the collection of characters in the string. The index
+<em>indicates</em> which one you want, hence the name. It can be any integer
+expression.</p>
+<p>Note that indexing a string always returns a <em>string</em>.  Indexing a tuple or list will return whatever element was present at that position.</p>
+<p>The same indexing notation works to extract elements from
+a list or tuple.  Note that tuples still use <tt class="docutils literal"><span class="pre">[</span> <span class="pre">]</span></tt> to do indexing.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prime_nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prime_nums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">friends</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;Joe&quot;</span><span class="p">,</span> <span class="s">&quot;Amy&quot;</span><span class="p">,</span> <span class="s">&quot;Brad&quot;</span><span class="p">,</span> <span class="s">&quot;Angelina&quot;</span><span class="p">,</span> <span class="s">&quot;Zuki&quot;</span><span class="p">,</span> <span class="s">&quot;Thandi&quot;</span><span class="p">,</span> <span class="s">&quot;Paris&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">friends</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">&#39;Angelina&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>In addition, we can use <strong>negative indices</strong>, which count backward from the end of the string. The expression <tt class="docutils literal"><span class="pre">fruit[-1]</span></tt> yields the last letter, <tt class="docutils literal"><span class="pre">fruit[-2]</span></tt> yields the second to last, and so on.</p>
+</div>
+<div class="section" id="slices">
+<span id="index-1"></span><h2>7.2. Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h2>
+<p>A <em>subsequence</em> of a sequence is obtained by taking a <strong>slice</strong>.  Note that a slice always produces a sequence of the same type that it was taken from. String slices produce strings, list slices produce lists.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;Peter, Paul, and Mary&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+<span class="go">Peter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">7</span><span class="p">:</span><span class="mi">11</span><span class="p">])</span>
+<span class="go">Paul</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">17</span><span class="p">:</span><span class="mi">21</span><span class="p">])</span>
+<span class="go">Mary</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">friends</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;Joe&quot;</span><span class="p">,</span> <span class="s">&quot;Amy&quot;</span><span class="p">,</span> <span class="s">&quot;Brad&quot;</span><span class="p">,</span> <span class="s">&quot;Angelina&quot;</span><span class="p">,</span> <span class="s">&quot;Zuki&quot;</span><span class="p">,</span> <span class="s">&quot;Thandi&quot;</span><span class="p">,</span> <span class="s">&quot;Paris&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">friends</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+<span class="go">(&#39;Brad&#39;, &#39;Angelina&#39;)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The operator <tt class="docutils literal"><span class="pre">[n:m]</span></tt> returns the part of the string from the n&#8217;th character
+to the m&#8217;th character, including the first but excluding the last. This
+behavior makes sense if you imagine the indices
+pointing <em>between</em> the characters, as in the following diagram:</p>
+<blockquote>
+<div><img alt="'banana' string" src="_images/banana.png" />
+</div></blockquote>
+<p>Now if you imagine this as a piece of paper, the slice operator <tt class="docutils literal"><span class="pre">[n:m]</span></tt> cuts
+the paper at the <tt class="docutils literal"><span class="pre">n</span></tt> and <tt class="docutils literal"><span class="pre">m</span></tt> positions.</p>
+<p>Two tricks are added to this: if you omit the first index (before the colon),
+the slice starts at the beginning of the string (or list). If you omit the second index,
+the slice extends to the end of the string (or list). Thus:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fruit</span> <span class="o">=</span> <span class="s">&quot;banana&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fruit</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">&#39;ban&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fruit</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+<span class="go">&#39;ana&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>What do you think <tt class="docutils literal"><span class="pre">s[:]</span></tt> means?   What about <tt class="docutils literal"><span class="pre">friends[4:]</span></tt>?</p>
+</div>
+<div class="section" id="concatenation-and-repetition">
+<h2>7.3. Concatenation and Repetition<a class="headerlink" href="#concatenation-and-repetition" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">+</span></tt> operator concatenates sequences.  Note that both operands must be of the same type:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">[1, 2, 3, 4, 5, 6]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Similarly, the <tt class="docutils literal"><span class="pre">*</span></tt> operator repeats a sequence a given number of times:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+<span class="go">[0, 0, 0, 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="go">[1, 2, 3, 1, 2, 3, 1, 2, 3]</span>
+<span class="go">&gt;&gt; &quot;ah&quot;*5</span>
+<span class="go">&#39;ahahahahahah&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The first example repeats <tt class="docutils literal"><span class="pre">[0]</span></tt> four times. The second example repeats the list <tt class="docutils literal"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></tt> three times. The last example repeats the word &#8220;ah&#8221; 5 times.</p>
+</div>
+<div class="section" id="length">
+<span id="index-2"></span><h2>7.4. Length<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">len</span></tt> function returns the number of elements
+in a sequence.  Note for a string that is simply the number of characters in the string:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fruit</span> <span class="o">=</span> <span class="s">&quot;banana&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">fruit</span><span class="p">)</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>To get the last letter of a string, you might be tempted to try something like
+this:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">sz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fruit</span><span class="p">)</span>
+<span class="n">last</span> <span class="o">=</span> <span class="n">fruit</span><span class="p">[</span><span class="n">sz</span><span class="p">]</span>       <span class="c"># ERROR!</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>That won&#8217;t work. It causes the runtime error
+<tt class="docutils literal"><span class="pre">IndexError:</span> <span class="pre">string</span> <span class="pre">index</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">range</span></tt>. The reason is that there is no
+letter at index position 6 in <tt class="docutils literal"><span class="pre">&quot;banana&quot;</span></tt>.
+Since we started counting at zero, the six indexes are
+numbered 0 to 5. To get the last character, we have to subtract 1 from
+<tt class="docutils literal"><span class="pre">length</span></tt>:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">sz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fruit</span><span class="p">)</span>
+<span class="n">last</span> <span class="o">=</span> <span class="n">fruit</span><span class="p">[</span><span class="n">sz</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Alternatively, we can use <strong>negative indices</strong>, which count backward from the
+end of the string. The expression <tt class="docutils literal"><span class="pre">fruit[-1]</span></tt> yields the last letter,
+<tt class="docutils literal"><span class="pre">fruit[-2]</span></tt> yields the second to last, and so on.</p>
+</div>
+<div class="section" id="the-for-each-loop">
+<span id="index-3"></span><h2>7.5. The <strong>for each</strong> loop<a class="headerlink" href="#the-for-each-loop" title="Permalink to this headline">¶</a></h2>
+<p>We will wrap up this chapter by discussing a new control structure that is powered by sequences.  Python&#8217;s <strong>for</strong> loop provides an convenient form of repetition.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="s">&quot;spidertime&quot;</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">c</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This loop will repeat the body of the statement (line 2) once for each element in the sequence, <tt class="docutils literal"><span class="pre">spidertime</span></tt>. Because of this, we will say this is a <strong>for each</strong> loop.  The loop body is executed for each element of the sequence.  The <strong>loop variable</strong>, <tt class="docutils literal"><span class="pre">c</span></tt> is assigned to each element of <tt class="docutils literal"><span class="pre">&quot;spidertime&quot;</span></tt>.  This provides 10 repetitions of line 2, each time printing the next letter of the loop.</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">s</span>
+<span class="go">p</span>
+<span class="go">i</span>
+<span class="go">d</span>
+<span class="go">e</span>
+<span class="go">r</span>
+<span class="go">t</span>
+<span class="go">i</span>
+<span class="go">m</span>
+<span class="go">e</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Let&#8217;s say we have some friends, and
+we&#8217;d like to send them each an email inviting them to our party.  We&#8217;ll we don&#8217;t
+quite know how to send email yet, so for the moment we&#8217;ll just print a message for each friend:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">seq</span> <span class="o">=</span><span class="p">[</span><span class="s">&quot;Joe&quot;</span><span class="p">,</span><span class="s">&quot;Amy&quot;</span><span class="p">,</span><span class="s">&quot;Brad&quot;</span><span class="p">,</span><span class="s">&quot;Angelina&quot;</span><span class="p">,</span><span class="s">&quot;Zuki&quot;</span><span class="p">,</span><span class="s">&quot;Thandi&quot;</span><span class="p">,</span><span class="s">&quot;Paris&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">:</span>
+    <span class="n">invite</span> <span class="o">=</span> <span class="s">&quot;Hi &quot;</span> <span class="o">+</span> <span class="n">f</span> <span class="o">+</span> <span class="s">&quot;.  Please come to my party on Saturday!&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">invite</span><span class="p">)</span>
+<span class="c"># more code can follow here ...</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>When we run this, the output looks like this:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">Hi Joe.  Please come to my party on Saturday!</span>
+<span class="go">Hi Amy.  Please come to my party on Saturday!</span>
+<span class="go">Hi Brad.  Please come to my party on Saturday!</span>
+<span class="go">Hi Angelina.  Please come to my party on Saturday!</span>
+<span class="go">Hi Zuki.  Please come to my party on Saturday!</span>
+<span class="go">Hi Thandi.  Please come to my party on Saturday!</span>
+<span class="go">Hi Paris.  Please come to my party on Saturday!</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ul class="simple">
+<li><strong>f</strong> in this <tt class="docutils literal"><span class="pre">for</span></tt> statement is called the <strong>loop variable</strong>.  We could have chosen another variable name instead.</li>
+<li><tt class="docutils literal"><span class="pre">seq</span></tt> must be a sequence, in this case it was a list, but tuples and strings work as well.</li>
+<li>Lines 2 and 3 are the <strong>loop body</strong>.  The loop body is always
+indented. The indentation determines exactly what statements are &#8220;in the body of the loop&#8221;.</li>
+<li>On each <em>iteration</em> or <em>pass</em> of the loop, first a check is done to see if there are
+still more items to be processed.  If there are none left (this is called
+the <strong>terminating condition</strong> of the loop), the loop has finished.
+Program execution continues at the next statement after the loop body, (e.g. in this case
+the next statement below the comment in line 4).</li>
+<li>If there are items still to be processed, the loop variable is updated to refer to the
+next item in the list.  This means, in this case, that the loop body is executed
+here 7 times, and each time <cite>f</cite> will refer to a different friend.</li>
+<li>At the end of each execution of the body of the loop, Python returns
+to the <tt class="docutils literal"><span class="pre">for</span></tt> statement, to see if there are more items to be handled, and to assign the
+next one to <cite>f</cite>.</li>
+</ul>
+</div>
+<div class="section" id="flow-of-execution-of-the-for-loop">
+<span id="index-4"></span><h2>7.6. Flow of Execution of the for loop<a class="headerlink" href="#flow-of-execution-of-the-for-loop" title="Permalink to this headline">¶</a></h2>
+<p>As a program executes, the interpreter always keeps track of which statement is
+about to be executed.  We call this the <strong>control flow</strong>, of the <strong>flow of execution</strong>
+of the program.  When humans execute programs, they often use their finger to point
+to each statement in turn.  So you could think of control flow as &#8220;Python&#8217;s moving finger&#8221;.</p>
+<p>Control flow until now has been strictly
+top to bottom, one statement at a time.  The <tt class="docutils literal"><span class="pre">for</span></tt> loop changes this.</p>
+<div class="admonition-flowchart-of-a-for-loop admonition">
+<p class="first admonition-title">Flowchart of a <strong>for</strong> loop</p>
+<p>Control flow is often easy to visualize and understand if we draw a flowchart.
+This shows the exact steps and logic of how the <tt class="docutils literal"><span class="pre">for</span></tt> statement executes.</p>
+<img alt="_images/flowchart_for.png" class="last" src="_images/flowchart_for.png" />
+</div>
+<div class="admonition-listen-to-yourself admonition">
+<p class="first admonition-title">Listen to yourself</p>
+<p>As you work on your algorithms for how to solve particular problems,
+&#8220;listen&#8221; to what you are saying.  If you hear words to this effect</p>
+<blockquote>
+<div><ul class="simple">
+<li>for each</li>
+<li>for every</li>
+<li>for all of them</li>
+</ul>
+</div></blockquote>
+<p class="last">You will need to use a for each loop to solve the problem.  This is
+a very common thing to do in computer science and you will find for
+loops to be your move common loop type since it is easy to use and
+can solve a wide range of problems.</p>
+</div>
+</div>
+<div class="section" id="glossary">
+<h2>7.7. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-control-flow">control flow</dt>
+<dd>See <em>flow of execution</em> in the next chapter.</dd>
+<dt id="term-for-loop">for loop</dt>
+<dd>A statement in Python for convenient repetition of statements in the <em>body</em> of the loop.</dd>
+<dt id="term-loop-body">loop body</dt>
+<dd>Any number of statements nested inside a loop. The nesting is indicated
+by the fact that the statements are indented under the for loop statement.</dd>
+<dt id="term-loop-variable">loop variable</dt>
+<dd>A variable used as part of a for loop. It is assigned a different value on
+each iteration of the loop.</dd>
+<dt id="term-terminating-condition">terminating condition</dt>
+<dd>A condition that occurs which causes a loop to stop repeating its body.
+In the <tt class="docutils literal"><span class="pre">for</span></tt> loops we saw in this chapter, the terminating condition
+has been when there are no more elements to assign to the loop variable.</dd>
+</dl>
+</div>
+<div class="section" id="exercises">
+<h2>7.8. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="accumulatorsAndCountingLoops.html" title="8. Iteration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introRecursion.html" title="6. Recursion and the Fractal Secrets of the World"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

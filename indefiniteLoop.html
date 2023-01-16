@@ -1,0 +1,606 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>20. Indefinite Loops &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="21. PyGame" href="pygame.html" />
+    <link rel="prev" title="19. List Algorithms" href="list_algorithms.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pygame.html" title="21. PyGame"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="list_algorithms.html" title="19. List Algorithms"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="indefinite-loops">
+<h1>20. Indefinite Loops<a class="headerlink" href="#indefinite-loops" title="Permalink to this headline">¶</a></h1>
+<p>So far we have seen two forms of iteration, for each loops and counting loops.  Both of these patterns have been accomplished using python&#8217;s for loop.  The for loop is a definite loop.  This means that the loop will run for a predetermined number of times before stopping.  There are great number of problems that can be solved with a definite loop.  However, there are problems that require something more flexible.</p>
+<p>Suppose you wanted to build a riddling program.  The computer asks, &#8220;What is the air speed velocity of an unladen swallow&#8221;  The computer should retrieve an answer over and over again until the user responds, &#8220;African or European?&#8221;.  A definite loop will not work for this application.  No matter how large of a counting loop you use, there would always be the chance that the user would need more guesses than are available.</p>
+<p>What we need is an indefinite loop.  Python provides a while loop that can be used to solve problems that have an indefinite number of iterations.  Compared to a for loop, the while loop is very simplistic.  This simplicity allows the programmer to use it in a variety of ways.
+In addition to solving indefinite problems, while loops can solve any problem that a for loop can solve.  In practice, it is better to use for loops when you need a definite loop, it cuts down on errors and aids in understanding.</p>
+<div class="section" id="structure-of-a-while-loop">
+<h2>20.1. Structure of a while loop<a class="headerlink" href="#structure-of-a-while-loop" title="Permalink to this headline">¶</a></h2>
+<p>A while loop is similar to an if statement.  Like an if statement, a while loop has a condition that is checked.  If the condition is true we enter the control structure.  The difference is that an if statement will only run once, the while loop runs as long as (i.e. <em>while</em>) the condition is true.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="n">condition</span><span class="o">==</span><span class="k">True</span><span class="p">):</span>
+    <span class="c">#do block</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This is simpler than python&#8217;s for loop.  On the other hand, while loops are more complexity to properly implement.  Within the body of the loop we must do something to cause the condition to change from True to False.  Below we demonstrate how a while loop can be used to solve our original problem at beginning of our chapter.  The magic happens on lines 5-6.  Once the correct password has been implemented, we can set keepgoing to False, and thus end the loop.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">keepgoing</span> <span class="o">=</span> <span class="k">True</span>
+<span class="k">while</span><span class="p">(</span><span class="n">keepgoing</span><span class="p">):</span>
+    <span class="n">ph</span> <span class="o">=</span> <span class="s">&quot;What is the air speed velocity of an unladen swallow&quot;</span>
+    <span class="n">passwd</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="n">ph</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">passwd</span> <span class="o">==</span> <span class="s">&quot;African or European&quot;</span><span class="p">):</span>
+        <span class="n">keepgoing</span><span class="o">=</span><span class="k">False</span>
+<span class="nb">print</span> <span class="s">&quot;You may pass&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="anything-you-can-do">
+<h2>20.2. Anything you can do...<a class="headerlink" href="#anything-you-can-do" title="Permalink to this headline">¶</a></h2>
+<p>Lets start by showing how while loops can do anything that a for loop can do.  In other words we will demonstrate that while loops are as powerful as for loops.</p>
+<div class="section" id="counting-loop">
+<h3>20.2.1. Counting Loop<a class="headerlink" href="#counting-loop" title="Permalink to this headline">¶</a></h3>
+<p>A counting loop needs to repeat the body of the loop a set number of times.  We can accomplish this by using an accumulator.  The counter is set to <cite>0</cite> before the loop.  Each time we go through the loop we increment the counter by one.  Once the counter reaches the limit, the loop will end.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#this loop will repeat 10 times</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span><span class="p">(</span><span class="n">counter</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span><span class="mi">1</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Using a while loop to create a counting loop is computationally faster that doing the equivalent operation using a for loop.
+A for loop must use the range function. In using range, the computer must first generate a list of <cite>n</cite> items.  For larger <cite>n</cite>, there will be a significant lag before the loop can start.  In addition, range will require significant memory usage.  The while loop implementation of the counter loop only needs space for one variable.  It can start right away and has no startup costs.  That said, the for loop leads to less errors as python will handle the counter for you.  In general, use the for loop.  Only worry about speed once your program has been written and you discover that it is too slow.</p>
+</div>
+<div class="section" id="for-each-loop">
+<h3>20.2.2. For each loop<a class="headerlink" href="#for-each-loop" title="Permalink to this headline">¶</a></h3>
+<p>A for loop is a perfect fit to implement a for each loop (you can probably tell just by the name).  However, it is possible to do this a with a while loop.  Lets review all of the things that happen in a for loop implementing a for each loop.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">word</span> <span class="o">=</span> <span class="s">&quot;spidertime&quot;</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">c</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In translating this to a while loop, our first step is to create a while loop that will repeat the same number of times that our for loop repeated.  A for loop will repeat once for each item in the sequence.  In the case of a string, the number of letters in the string.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">word</span> <span class="o">=</span> <span class="s">&quot;spidertime&quot;</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span><span class="mi">1</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Our next step is get <em>each</em> variable in the sequence.  The most common mistake is to try to reuse the counter variable to store each element of the sequence.  Resist that urge and create another variable to store each element.  Notice that it takes 4 lines of code (Lines 3-6) to replace the for loop line in our first example.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">word</span> <span class="o">=</span> <span class="s">&quot;spidertime&quot;</span>
+
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">counter</span><span class="p">]</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span><span class="mi">1</span>
+
+    <span class="nb">print</span> <span class="n">c</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In python, there is rarely a good reason to use a while loop to implement a for each loop.  The for loop is just too good.  However, many other languages only (effectively) have while loops.  In those languages, you would need to implement your own for each functionality.  In python it is good to understand all of the work that the for loop does for you.</p>
+</div>
+</div>
+<div class="section" id="sentinel-loop">
+<h2>20.3. Sentinel Loop<a class="headerlink" href="#sentinel-loop" title="Permalink to this headline">¶</a></h2>
+<p>The sentinel loop is one of the most common ways to use a while loop.  A sentinel loop is typically used to inspect a stream of data: from the user or a file.  The concept of a sentinel is that the there is something intrinsic about the data that indicates that the loop should stop.  For instance, a program that is adding a long list of numbers might stop when it reaches a -1.  Another program reading strings from the user would stop if it received an empty string.</p>
+<p>The data that causes the loop to stop is called the sentinel.  The algorithms for a sentinel loop can be summed up in 4 steps.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Get the first piece of data</li>
+<li>While not sentinel:<ol class="arabic" start="3">
+<li>process data</li>
+<li>get next piece of data</li>
+</ol>
+</li>
+</ol>
+</div></blockquote>
+<p>Step one gets the first piece of data.  This step is known as priming the pump.  It will only be executed once and is there to get the loop started.  Next we come to the while loop.  We have a piece of data to test.  The while loop serves to insure that only &#8220;good&#8221; data is allowed inside of the loop.  It is <em>guarding</em> the loop.  In the loop, we will first process the data.  There had to be a reason that we asked for the data, right?  Once we have used the previous data, we&#8217;ll grab the next piece of data.  What happens next is the most elegant part.  We got the next piece of data as the last action in the loop.  That means we will now go to the top of the while loop and test our new data.  If the data is good, we will re-enter the loop.  Once we get data that is not <em>good</em>, i.e. it is the sentinel, the loop will stop.</p>
+<p>Below we have an example of a sentinel loop used to add numbers together.  Notice that we have one variable for the data and another variable for the accumulator.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot;Enter the next number, or -1 to quit&quot;</span>
+<span class="c">#get first piece of data</span>
+<span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">))</span>
+<span class="c">#while not sentinel</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">val</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c">#process data</span>
+    <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="o">+</span><span class="n">val</span>
+    <span class="c">#get next piece of data</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">))</span>
+<span class="nb">print</span><span class="s">&quot;The total of the numbers you entered is &quot;</span><span class="p">,</span> <span class="n">total</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="the-break-statement">
+<h2>20.4. The <tt class="docutils literal"><span class="pre">break</span></tt> statement<a class="headerlink" href="#the-break-statement" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>break</strong> statement is used to immediately leave the body of its loop.  The next
+statement to be executed is the first one after the body:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">29</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c"># if the number is odd</span>
+       <span class="k">break</span>        <span class="c"># immediately exit the loop</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;done&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This prints:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">12</span>
+<span class="go">16</span>
+<span class="go">done</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition-the-pre-test-loop-standard-loop-behavior admonition">
+<p class="first admonition-title">The pre-test loop - standard loop behavior</p>
+<p><tt class="docutils literal"><span class="pre">for</span></tt> and <tt class="docutils literal"><span class="pre">while</span></tt> loops do their tests at the start, before executing
+any part of the body.   They&#8217;re called <strong>pre-test</strong> loops, because the test
+happens before (pre) the body.
+<tt class="docutils literal"><span class="pre">break</span></tt> and <tt class="docutils literal"><span class="pre">return</span></tt> are our tools for adapting this standard behavior.</p>
+<img alt="_images/pre_test_loop.png" class="last" src="_images/pre_test_loop.png" />
+</div>
+</div>
+<div class="section" id="other-flavors-of-loops">
+<h2>20.5. Other flavors of loops<a class="headerlink" href="#other-flavors-of-loops" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes we&#8217;d like to have the <strong>middle-test</strong> loop with the exit test in the middle
+of the body, rather than at the beginning or at the end.  Or a <strong>post-test</strong> loop that
+puts its exit test as the last thing in the body.   Other languages have different
+syntax and keywords for these different flavors, but Python just uses
+a combination of <tt class="docutils literal"><span class="pre">while</span></tt> and <tt class="docutils literal"><span class="pre">if</span> <span class="pre">condition:</span> <span class="pre">break</span></tt> to get the job done.</p>
+<p>A typical example is a problem where the user has to input numbers to be summed.
+To indicate that there are no more inputs, the user enters a special value, often
+the value -1, or the empty string.  This needs a middle-exit loop pattern:
+input the next number, then test whether to exit, or else process the number:</p>
+<blockquote>
+<div><div class="admonition-the-middle-test-loop-flowchart admonition">
+<p class="first admonition-title">The middle-test loop flowchart</p>
+<img alt="_images/mid_test_loop.png" class="last" src="_images/mid_test_loop.png" />
+</div>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="k">True</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">(</span><span class="s">&quot;Enter the next number, or -1 to quit&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="n">response</span>
+<span class="nb">print</span> <span class="s">&quot;The total of the numbers you entered is &quot;</span><span class="p">,</span> <span class="n">total</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Convince yourself that this fits the middle-exit loop flowchart: line 3
+does some useful work, lines 4 and 5 can exit the loop, and if they don&#8217;t
+line 6 does more useful work before the next iteration starts.</p>
+<p>The <tt class="docutils literal"><span class="pre">while</span> <span class="pre">bool-expr:</span></tt> uses the boolean expression to determine whether to iterate again.
+<tt class="docutils literal"><span class="pre">True</span></tt> is a trivial boolean expression, so <tt class="docutils literal"><span class="pre">while</span> <span class="pre">True:</span></tt>  means <em>always do
+the loop body again</em>.  This is a language <em>idiom</em> &#8212; a convention that
+most programmers will recognize immediately. Since the expression on line 2
+will never terminate the loop, (it is a dummy test) the programmer must arrange to
+break (or return) out of the loop body elsewhere, in some other way (i.e. in lines 4 and 5 in
+this sample). A clever compiler or interpreter will understand that line 2 is a
+fake test that must always succeed, so it won&#8217;t even generate a test, and our flowchart
+never even put the diamond-shape dummy test box at the top of the loop!</p>
+<p>Similarly, by just moving the <tt class="docutils literal"><span class="pre">if</span> <span class="pre">condition:</span> <span class="pre">break</span></tt> to the end of the loop body we
+create a pattern for a post-test loop.  Post-test loops are used when you want to
+be sure that the loop body always executes at least once (because the first test
+only happens at the end of the execution of the first loop body).
+This is useful, for example, if we want to play an interactive game against
+the user &#8212; we always want to play at least one game:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">while</span> <span class="k">True</span><span class="p">:</span>
+    <span class="n">play_the_game_once</span><span class="p">()</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&quot;Play again? (yes or no)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span> <span class="o">!=</span> <span class="s">&quot;yes&quot;</span><span class="p">:</span>
+        <span class="k">break</span>
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;Goodbye!&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<div class="admonition-hint-think-about-where-you-want-the-exit-test-to-happen admonition">
+<p class="first admonition-title">Hint: think about where you want the exit test to happen</p>
+<p class="last">Once you&#8217;ve recognized that you need a loop to repeat something, think
+about its terminating condition &#8212; when will I want to stop iterating?
+Then figure out whether you need to do the test before starting
+the first (and every other) iteration, or at the end of
+the first (and every other) iteration, or perhaps in
+the middle of each iteration.  Interactive programs that require input
+from the user or read from files often need to exit their loops in the
+middle or at the end of an iteration, when it becomes clear that there is
+no more data to process, or the user doesn&#8217;t want to play our game anymore.</p>
+</div>
+</div>
+<div class="section" id="glossary">
+<h2>20.6. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-algorithm">algorithm</dt>
+<dd>A step-by-step process for solving a category of problems.</dd>
+<dt id="term-body">body</dt>
+<dd>The statements inside a loop.</dd>
+<dt id="term-breakpoint">breakpoint</dt>
+<dd>A place in your program code where program execution will pause (or break),
+allowing you to inspect the state of the program&#8217;s variables, or single-step
+through individual statements, executing them one at a time.</dd>
+<dt id="term-bump">bump</dt>
+<dd>Programmer slang. Synonym for increment.</dd>
+<dt id="term-counter">counter</dt>
+<dd>A variable used to count something, usually initialized to zero and
+incremented in the body of a loop.</dd>
+<dt id="term-cursor">cursor</dt>
+<dd>An invisible marker that keeps track of where the next character will
+be printed.</dd>
+<dt id="term-decrement">decrement</dt>
+<dd>Decrease by 1.</dd>
+<dt id="term-definite-iteration">definite iteration</dt>
+<dd>A loop where we have an upper bound on the number of times the
+body will be executed.  Definite iteration is usually best coded
+as a <tt class="docutils literal"><span class="pre">for</span></tt> loop.</dd>
+<dt id="term-development-plan">development plan</dt>
+<dd>A process for developing a program. In this chapter, we demonstrated a
+style of development based on developing code to do simple, specific
+things and then encapsulating and generalizing.</dd>
+<dt id="term-encapsulate">encapsulate</dt>
+<dd>To divide a large complex program into components (like functions) and
+isolate the components from each other (by using local variables, for
+example).</dd>
+<dt id="term-escape-sequence">escape sequence</dt>
+<dd>An escape character, \, followed by one or more printable characters
+used to designate a non-printable character.</dd>
+<dt id="term-generalize">generalize</dt>
+<dd>To replace something unnecessarily specific (like a constant value)
+with something appropriately general (like a variable or parameter).
+Generalization makes code more versatile, more likely to be reused, and
+sometimes even easier to write.</dd>
+<dt id="term-increment">increment</dt>
+<dd>Both as a noun and as a verb, increment means to increase by 1.</dd>
+<dt id="term-infinite-loop">infinite loop</dt>
+<dd>A loop in which the terminating condition is never satisfied.</dd>
+<dt id="term-indefinite-iteration">indefinite iteration</dt>
+<dd>A loop where we just need to keep going until some condition is met.
+A <tt class="docutils literal"><span class="pre">while</span></tt> statement is used for this case.</dd>
+<dt id="term-initialization-of-a-variable">initialization (of a variable)</dt>
+<dd>To initialize a variable is to give it an initial value.
+Since in Python variables don&#8217;t exist
+until they are assigned values, they are initialized when they are
+created.  In other programming languages this is not the case, and
+variables can be created without being initialized, in which case they
+have either default or <em>garbage</em> values.</dd>
+<dt id="term-iteration">iteration</dt>
+<dd>Repeated execution of a set of programming statements.</dd>
+<dt id="term-loop">loop</dt>
+<dd>A statement or group of statements that execute repeatedly until a
+terminating condition is satisfied.</dd>
+<dt id="term-loop-variable">loop variable</dt>
+<dd>A variable used as part of the terminating condition of a loop.</dd>
+<dt id="term-meta-notation">meta-notation</dt>
+<dd>Extra symbols or notation that helps describe other notation. Here we introduced
+square brackets, ellipses, italics, and bold as meta-notation to help
+describe optional, repeatable, substitutable and fixed parts of the Python syntax.</dd>
+<dt id="term-middle-test-loop">middle-test loop</dt>
+<dd>A loop that executes some of the body, then tests for the exit condition,
+and then may execute some more of the body.  We don&#8217;t have a special
+Python construct for this case, but can
+use <tt class="docutils literal"><span class="pre">while</span></tt> and <tt class="docutils literal"><span class="pre">break</span></tt> together.</dd>
+<dt id="term-nested-loop">nested loop</dt>
+<dd>A loop inside the body of another loop.</dd>
+<dt id="term-newline">newline</dt>
+<dd>A special character that causes the cursor to move to the beginning of
+the next line.</dd>
+<dt id="term-post-test-loop">post-test loop</dt>
+<dd>A loop that executes the body, then tests for the exit condition.  We don&#8217;t have a special
+Python construct for this, but can use <tt class="docutils literal"><span class="pre">while</span></tt> and <tt class="docutils literal"><span class="pre">break</span></tt> together.</dd>
+<dt id="term-pre-test-loop">pre-test loop</dt>
+<dd>A loop that tests before deciding whether the execute its body.  <tt class="docutils literal"><span class="pre">for</span></tt> and <tt class="docutils literal"><span class="pre">while</span></tt>
+are both pre-test loops.</dd>
+<dt id="term-reassignment">reassignment</dt>
+<dd>Making more than one assignment to the same variable during the
+execution of a program.</dd>
+<dt id="term-single-step">single-step</dt>
+<dd>A mode of interpreter execution where you are able to execute your
+program one step at a time, and inspect the consequences of that step.
+Useful for debugging and building your internal mental model of what is
+going on.</dd>
+<dt id="term-tab">tab</dt>
+<dd>A special character that causes the cursor to move to the next tab stop
+on the current line.</dd>
+<dt id="term-trichotomy">trichotomy</dt>
+<dd>Given any real numbers <em>a</em> and <em>b</em>, exactly one of the following
+relations holds: <em>a &lt; b</em>, <em>a &gt; b</em>, or <em>a == b</em>. Thus when you can
+establish that two of the relations are false, you can assume the
+remaining one is true.</dd>
+<dt id="term-trace">trace</dt>
+<dd>To follow the flow of execution of a program by hand, recording the
+change of state of the variables and any output produced.</dd>
+</dl>
+</div>
+<div class="section" id="exercises">
+<h2>20.7. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<p>This chapter showed us how to sum a list of items,
+and how to count items.  The counting example also had an <tt class="docutils literal"><span class="pre">if</span></tt> statement
+that let us only count some selected items.  In the previous
+chapter we also showed a function <tt class="docutils literal"><span class="pre">find_first_2_letter_word</span></tt> that allowed
+us an &#8220;early exit&#8221; from inside a loop by using <tt class="docutils literal"><span class="pre">return</span></tt> when some condition occurred.
+We now also have <tt class="docutils literal"><span class="pre">break</span></tt> to exit a loop (but not the enclosing function, and
+<tt class="docutils literal"><span class="pre">continue</span></tt> to abandon the current iteration of the loop without ending the loop.</p>
+<p>Composition of list traversal, summing, counting, testing conditions
+and early exit is a rich collection of building blocks that can be combined
+in powerful ways to create many functions that are all slightly different.</p>
+<p>The first six questions are typical functions you should be able to write using only
+these building blocks.</p>
+<ol class="arabic">
+<li><p class="first">Write a function to count how many odd numbers are in a list.</p>
+</li>
+<li><p class="first">Sum up all the even numbers in a list.</p>
+</li>
+<li><p class="first">Sum up all the negative numbers in a list.</p>
+</li>
+<li><p class="first">Count how many words in a list have length 5.</p>
+</li>
+<li><p class="first">Sum all the elements in a list up to but not including the first even number.
+(Write your unit tests.  What if there is no even number?)</p>
+</li>
+<li><p class="first">Count how many words occur in a list up to and including the first occurrence of the word &#8220;sam&#8221;.
+(Write your unit tests for this case too.  What if &#8220;sam&#8221; does not occur?)</p>
+</li>
+<li><p class="first">Add a print function to Newton&#8217;s <tt class="docutils literal"><span class="pre">sqrt</span></tt> function that
+prints out <tt class="docutils literal"><span class="pre">better</span></tt> each time it is calculated. Call your modified
+function with 25 as an argument and record the results.</p>
+</li>
+<li><p class="first">Trace the execution of the last version of <tt class="docutils literal"><span class="pre">print_mult_table</span></tt> and figure
+out how it works.</p>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">print_triangular_numbers(n)</span></tt> that prints out the first
+n triangular numbers. A call to <tt class="docutils literal"><span class="pre">print_triangular_numbers(5)</span></tt> would
+produce the following output:</p>
+<div class="highlight-python"><pre>1       1
+2       3
+3       6
+4       10
+5       15</pre>
+</div>
+<p>(<em>hint: use a web search to find out what a triangular number is.</em>)</p>
+</li>
+<li><p class="first">Write a function, <tt class="docutils literal"><span class="pre">is_prime</span></tt>, which takes a single integer argument
+and returns <tt class="docutils literal"><span class="pre">True</span></tt> when the argument is a <em>prime number</em> and <tt class="docutils literal"><span class="pre">False</span></tt>
+otherwise. Add tests for cases like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">35</span><span class="p">),</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">19911129</span><span class="p">),</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The last case could represent your birth date.  Were you born on a prime day?
+In a class of 100 students, how many do you think would have prime birth dates?</p>
+</li>
+<li><p class="first">Revisit the drunk student problem from the exercises in chapter 3.
+This time, the drunk student makes a turn, and then takes some steps forward, and repeats this.
+Our social science student now records <cite>pairs</cite> of data: the angle of each turn, and the number
+of steps taken after the turn.  Her experimental data is
+[(160, 20), (-43, 10), (270, 8), (-43, 12)].  Use a turtle to draw the path taken by our drunk friend.</p>
+</li>
+<li><p class="first">Many interesting shapes can be drawn by the turtle by giving a list of pairs like we did
+above, where the first item of the pair is the angle to turn, and the second item is
+the distance to move forward.  Set up a list of pairs so that the turtle draws a
+house with a cross through the centre, as show here.
+This should be done without going over any of the lines / edges more than once,
+and without lifting your pen.</p>
+<img alt="_images/tess_house.png" src="_images/tess_house.png" />
+</li>
+<li><p class="first">Not all shapes like the one above can be drawn without lifting your pen, or going over
+an edge more than once.  Which of these can be drawn?</p>
+<img alt="_images/tess_more_houses.png" src="_images/tess_more_houses.png" />
+<p>Now read Wikipedia&#8217;s article(<a class="reference external" href="http://en.wikipedia.org/wiki/Eulerian_path">http://en.wikipedia.org/wiki/Eulerian_path</a>) about Eulerian paths.
+Learn how to tell immediately by inspection whether it is possible to find a solution or not.
+If the path is possible, you&#8217;ll also know where to put your pen to start drawing, and where
+you should end up!</p>
+</li>
+<li><p class="first">What will <tt class="docutils literal"><span class="pre">num_digits(0)</span></tt> return? Modify it to return <tt class="docutils literal"><span class="pre">1</span></tt> for this
+case. Why does a call to <tt class="docutils literal"><span class="pre">num_digits(-24)</span></tt> result in an infinite loop?
+(<em>hint: -1//10 evaluates to -1</em>)  Modify <tt class="docutils literal"><span class="pre">num_digits</span></tt> so that it works
+correctly with any integer value. Add these tests:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">num_digits</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_digits</span><span class="p">(</span><span class="o">-</span><span class="mi">12345</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">num_even_digits(n)</span></tt> that counts the number
+of even digits in <tt class="docutils literal"><span class="pre">n</span></tt>.  These tests should pass:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">123456</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">2468</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">1357</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">sum_of_squares(xs)</span></tt> that computes the sum
+of the squares of the numbers in the list <tt class="docutils literal"><span class="pre">xs</span></tt>.  For example,
+<tt class="docutils literal"><span class="pre">sum_of_squares([2,</span> <span class="pre">3,</span> <span class="pre">4])</span></tt> should return 4+9+16 which is 29:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">sum_of_squares</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]),</span> <span class="mi">29</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">sum_of_squares</span><span class="p">([</span> <span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">sum_of_squares</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]),</span> <span class="mi">29</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You and your friend are in a team to write a two-player game,
+human against computer, such as Tic-Tac-Toe / Noughts and Crosses.
+Your friend will write the logic to play one round of the game, while you will
+write the logic to allow many rounds of play, keep score, decide who
+plays, first, etc.  The two of you negotiate on how the two parts of the
+program will fit together, and you come up with this simple
+scaffolding (which your friend will improve later):</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># your friend will complete this function</span>
+<span class="k">def</span> <span class="nf">play_once</span><span class="p">(</span><span class="n">human_plays_first</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Must play one round of the game. If the parameter</span>
+<span class="sd">       is True, the human gets to play first, else the</span>
+<span class="sd">       computer gets to play first.  When the round ends,</span>
+<span class="sd">       the return value of the function is one of</span>
+<span class="sd">       -1 (human wins),  0 (game drawn),   1 (computer wins).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># This is all dummy scaffolding code right at the moment...</span>
+    <span class="kn">import</span> <span class="nn">random</span>                  <span class="c"># see ch 10 for details</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="c"># pick a random result between -1 and 1.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Human plays first={0},  winner={1} &quot;</span>
+                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">human_plays_first</span><span class="p">,</span> <span class="n">result</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<ol class="loweralpha simple">
+<li>Write the main program which repeatedly calls this function to play
+the game, and after each round it announces the outcome as &#8220;I win!&#8221;, &#8220;You win!&#8221;, or &#8220;Game drawn!&#8221;.
+It then asks the player &#8220;Do you want to play again?&#8221; and either plays again,
+or says &#8220;Goodbye&#8221;, and terminates.</li>
+<li>Keep score of how many wins each player has had, and how many draws there have been.
+After each round of play, also announce the scores.</li>
+<li>Add logic so that the players take turns to play first.</li>
+<li>Compute the percentage of wins for the human, out of all games played.  Also announce this
+at the end of each round.</li>
+<li>Draw a flowchart of your logic.</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="pygame.html" title="21. PyGame"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="list_algorithms.html" title="19. List Algorithms"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,463 @@
+..  Copyright (C)  Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.3
+    or any later version published by the Free Software Foundation;
+    with Invariant Sections being Foreword, Preface, and Contributor List, no
+    Front-Cover Texts, and no Back-Cover Texts.  A copy of the license is
+    included in the section entitled "GNU Free Documentation License".
+
+|
+    
+Acting Intelligently
+====================
+
+In creating games and simulations we have to include the ability for objects to behave independently.  Lets revisit our program from Chapter 11 that created a variety of random graphic objects floating across the screen.  If you are fuzzy on how we created graphics objects, you should revisit chapter 11 before continuing.
+
+
+  .. image:: illustrations/fallingAnimate.png
+    :alt: Circles and Squares falling
+
+
+
+  .. sourcecode:: python3
+    :linenos:
+     
+
+     import random
+
+     def randomGraphicObject(surface, widthMin,widthMax,\
+			     heightMin,heightMax, dimMax):
+	 """
+	    create a graphics object at random within
+	    the width and height parameter.  Each object
+	    will use dimMax as a clue on how big the object should be
+	 """
+
+	 t   = random.randint(1,2) #what type of thing?
+	 x   = random.randint(widthMin,widthMax)
+	 y   = random.randint(heightMin,heightMax)
+	 dim = random.randint(dimMax/2,dimMax)
+
+	 if(t == 1):
+	     return Circle(x,y,dim,surface)
+	 else:
+	     return Square(x,y,dim,surface)
+
+
+
+
+     def objectAnimation(surf):
+	 """"Many objects moving around""""
+
+	 objs =[]
+	 for i in range(100):
+	     ob = randomGraphicObject(surf,0,300,-300,200,40)
+	     objs=objs+[ob]
+
+	 for i in range(200):
+	     #clear picture
+	     surf.fill( (255,255,255) )
+
+	     #draw the pictures
+	     for graph in objs:
+		 graph.draw()
+
+	     pygame.display.update()
+
+	     #sleep till next picture
+	     time.sleep(.05)
+
+	     #update for the next picture
+	     for graph in objs:
+		 graph.moveBy(0,4))    
+
+
+    def main():
+	pygame.init()
+	win = pygame.display.set_mode( (300,300) )
+
+	objectAnimation(win)
+
+	pygame.quit();
+
+
+    main()
+
+
+
+In the above code, all of the object move in the same direction.  What if we needed to create objects that each move in their own direction?  Presently all movement is controlled in the lines 46-47.  We could hard code how each object moved but that would be come very difficult to write as we would need a new line of code for each object.
+
+What we should do for each object is store the direction the object should travel and ask the the objects to move themselves.  The concept of an object that knows how to draw itself and how to react to its environment brings us to Sprites.
+
+
+
+  
+Sprites
+-------
+
+A sprite is an object that can move about in a game, 
+and has internal behavior and state of its own.  For example,
+a spaceship would be a sprite, the player would be a sprite, 
+and bullets and bombs would all be sprites.
+
+Object oriented programming (OOP) is ideally suited to a 
+situation like this: each object can have its own attributes
+and internal state, and a couple of methods.  All sprites will need at least three methods.  
+
+* Sprites need to initialize their variables.  Like all objects there needs to be a mechanism to tell the sprite how to set its initial values.
+* Sprites need to draw themselves when asked.  Games and animation are closely related.  Each frame of the game requires that we redraw the screen.
+* Sprites need to update their state.  This is a new concept.  In our simple example this function will move the object in the direction it selected for itself.  In a more complex sprite, this function would calculate how the sprite reacts to the environment and where the sprite should move.
+
+
+We have some choices on how to implement a Sprite.  If we created each sprite as its own object, we would not gain any benefit from the work that we have already done.  We really want to reuse the graphic objects we created before to avoid work.  One apporach is to use inheritance. With inheritance we would need to create a child class for Circle and a child class for Square.  If we only sprites for Circles and Squares this might be an appropriate choice.  However, if we had 8 separate graphic objects, we would need 8 subclasses.
+
+In this situation, inheritance is probably overkill. A better technique is to use composition.  Composition simply means that the new class will have a variable to store the previous class instead of using inheritance.  In our case the sprite will have a graphics object as a data member.  Our sprite will simply give commands to its graphic object in order to solve problems.  This means we will only need to create one sprite class for any number of graphic objects that we might want to use.
+
+
+  .. sourcecode:: python3
+    :linenos:
+     
+     import random
+     class Sprite(object):
+
+          def draw(self):
+	  """draws sprite to the screen"""
+	     pass
+
+	  def update(self):
+	  """updates the state of the sprite"""
+	     pass
+
+
+     class WanderingSprite(Sprite):
+     """ 
+        sprite that starts at an initial position 
+	and 'walks' in one direction.
+     """
+
+        def __init__(self,obj):
+	    self.obj = obj
+	    self.x = random.randint(-6,6)
+	    self.y = random.randint(-6,6)
+
+     	    if(self.x == 0 and self.y ==0):
+	       #avoid objects that don't move at all
+	       self.y = 1
+
+	#override
+	def draw(self):
+	    """ draw sprite to screen """
+	    self.obj.draw()
+
+	#override
+	def update(self):
+	    """ updates the state of the sprite """
+	    self.obj.moveBy(self.x,self.y)
+
+
+     def randomGraphicObject(surface, widthMin,widthMax,\
+			     heightMin,heightMax, dimMax):
+	 """
+	    create a graphics object at random within
+	    the width and height parameter.  Each object
+	    will use dimMax as a clue on how big the object should be
+	 """
+
+	 t   = random.randint(1,2) #what type of thing?
+	 x   = random.randint(widthMin,widthMax)
+	 y   = random.randint(heightMin,heightMax)
+	 dim = random.randint(dimMax/2,dimMax)
+
+	 if(t == 1):
+	     return Circle(x,y,dim,surface)
+	 else:
+	     return Square(x,y,dim,surface)
+
+
+
+
+     def spriteAnimation(surf):
+	 """"Many objects moving around""""
+
+	 objs =[]
+	 for i in range(100):
+	     ob = randomGraphicObject(surf,0,300,-300,200,40)
+	     sprite = WanderingSprite(ob)
+	     objs=objs+[sprite]
+
+	 for i in range(200):
+	     #clear picture
+	     surf.fill( (255,255,255) )
+
+	     #draw the pictures
+	     for graph in objs:
+		 graph.draw()
+
+	     pygame.display.update()
+
+	     #sleep till next picture
+	     time.sleep(.05)
+
+	     #update for the next picture
+	     for graph in objs:
+		 graph.update()    
+
+
+    def main():
+	pygame.init()
+	win = pygame.display.set_mode( (300,300) )
+
+	spriteAnimation(win)
+
+	pygame.quit();
+
+
+    main()
+
+
+Timers
+------
+
+Our sprite class creates a much more complex animation without cluttering the main loop of the animation.  Let's add some more additions to create an even more interesting effect.  What if we wanted the sprites to change directions?  Below is a common first pass at creating random movement by changing the update method.
+
+  .. sourcecode:: python3
+    :linenos:
+
+    def update(self):
+        """ updates the state of the sprite """
+      
+        self.x = random.randint(-6,6)
+        self.y = random.randint(-6,6)
+    
+        self.obj.moveBy(self.x,self.y)
+
+
+This will introduce random movement, but it will not be the movement we had in mind.  It creates an effect that looks like the objects are rapidly vibrating.  If we want to create a better effect of random movement we need to insure that the movement lasts for a small period of time before the sprite switches direction.
+
+We can accomplish through the use of an accumulator. We'll call this accumulator `countdown`.  In this case `countdown` is set to a random number that represents how many frames the sprite will travel before changing direction.  Inside the update, sprite will decrement `countdown` by one.  Once `countdown` reaches 0, a new direction is selected and the `countdown` timer is reset.  The delay in picking a new direction, creates the illusion of purpose and sells off the random movement.
+
+  .. sourcecode:: python3
+     :linenos: 
+     
+     class WanderingSprite2(Sprite):
+         """ 
+             sprite that starts at an initial position 
+     	and 'walks' in one direction.
+         """
+     
+         def __init__(self,obj):
+             self.obj = obj
+             self._setRandomDirection()
+
+         def _setRandomDirection(self):
+             self.countdown = random.randint(10,100)
+             
+             self.x = random.randint(-6,6)
+             self.y = random.randint(-6,6)
+     
+             if(self.x == 0 and self.y ==0):
+                 #avoid objects that don't move at all
+                 self.y = 1
+
+
+         #override
+         def draw(self):
+     	    """ draw sprite to screen """
+     	    self.obj.draw()
+     
+         #override
+         def update(self):
+             """ updates the state of the sprite """
+             if(self.countdown<0):
+     	         self._setRandomDirection()
+             self.countdown = self.countdown - 1
+             self.obj.moveBy(self.x,self.y)
+     
+     
+     
+Reacting to the environment
+---------------------------
+
+
+So far our sprites have been oblivious to their surroundings.  In this section we will work towards creating sprites that react to the other objects within the world.  Like many large problems we need to carefully dissect it and find out what the parts of the problem are.
+
+Let's work on the Bomb game.  In this GAME the player moves a CHARACTER on the screen (a green circle) using keyboard commands.  The player must avoid BOMBS.  If a PLAYER touches a BOMB the GAME is over.  The BOMBS move around the screen in a random manner.
+
+Overlook the fact that this is a bad game.  There is no win condition, and we have not indicated how the challenge level will increase over time.  Sometimes a simple game is the best one to learn from.  The first thing we should look at is what objects are present in our game description. One trick is to look for the nouns.  We have capitalized the important nouns to make it easier to see.  The bombs and character are the easiest nouns to see. Choosing to make game an object is a common technique to keep the data from getting too difficult to follow.  If there was more than one player, we might also select that as an object to implement.
+
+Once we have selected the objects in the game, we know what we need to create.  The player is just a circle graphics object.  We can reuse what we have created before.  The Bomb is an object that needs to know 
+if the player has hit it.  (You could do this the other way around, the player needs to know if it has hit a bomb. As we already need to add logic to the bombs it seems like a good idea to do the collision logic in bombs as well.)  The wandering aspect of the Bomb can be handled by using inheritance from the WanderingSprite we created in the last section.  The Game object will be used to run the game loop and provide a nice way to let the objects in the game find each other.
+
+Bomb Class
+~~~~~~~~~~
+
+Our bomb class inherits from the wandering sprite we created at the beginning of the section.  There are two tricks to make this work.  First we pass the `BombGame` object as a parameter to the Bomb.  Whenever Bomb needs to know something about the game world, bomb can ask the game object.  Second, in update the bomb object determines if it has hit the player (retrieved from the game object) and will call endgame if it has.  Otherwise, the Bomb will use its parent's update to roam around the screen.
+
+  .. sourcecode:: python3 
+     :linenos:
+
+
+     class Bomb(WanderingSprite):
+     
+         def __init__(self,pos,game):
+             obj = Circle(pos[0],pos[1],20,game.getSurf())
+             obj.setFillColor(pygame.Color(255,0,0))
+             WanderingSprite.__init__(self,obj)
+     
+         def update(self):
+             #check if you hit the player
+             p = game.getPlayer()
+             playerpos = p.getPos()
+             myPos = self.obj.getPos() #stored by parent
+
+             dx = playerpos[0]-myPos[0]
+             dy = playerpos[1]-myPos[1]
+	     d = (dx**2 + dy**2)**.5
+
+	     r = self.obj.getRadius()+p.getRadius()
+
+             if( d < r ): 
+                 game.endGame()
+
+             super(Bomb,self).update()
+          
+
+   
+
+BombGame Class
+~~~~~~~~~~~~~~
+
+The BombGame class handles the actual game.  The constructor creates the surface, bombs and player objects that are needed for the game.  Note the clever way in which the bomb constructor is called.  Remember that the bomb need the game object.  We can do that by passing self.  When we are in the BombGame class code, self is a BombGame object.
+
+There are several getters and setters to ensure that the bomb object can get all of the information it needs and to alter the game itself.  These were added as we discovered that bomb needed to get information from or send new instructions to the game.
+
+The last primary method is `playGame`.  This implements a common game loop.  Large pieces of code were moved to `draw` and `handleKeyBoardInput()` to keep the code easy to read.
+
+
+ .. sourcecode:: python3
+    :linenos:
+
+     class BombGame(object):
+     
+         def __init__(self,numBombs):
+             self.win = pygame.display.set_mode( (400,400) )
+     
+             self.bombs = []
+             for i in range(numBombs):
+                 pos =( random.randint(0,400),random.randint(0,300) )
+                 self.bombs += [ Bomb( pos,self ) ]
+
+             pos = ( random.randint(0,400),random.randint(300,400) )
+             self.player = Circle(pos[0],pos[1],20,self.win)
+             self.player.setFillColor(pygame.Color(0,0,255) )
+     
+             self.runGame = True
+     
+         def getPlayer(self):
+             return self.player
+     
+         def getSurf(self):
+             return self.win
+         
+         def endGame(self):
+             self.runGame=False
+     
+         def handleKeyBoardInput(self):
+             pygame.event.pump()
+             key=pygame.key.get_pressed()
+
+             if(key[pygame.K_q]):
+                 self.endGame()
+             elif(key[pygame.K_UP]):
+                 self.player.moveBy(0,-4)
+             elif(key[pygame.K_LEFT]):
+                 self.player.moveBy(-4,0)
+             elif(key[pygame.K_DOWN]):
+                 self.player.moveBy(0,4)
+             elif(key[pygame.K_RIGHT]):
+                 self.player.moveBy(4,0)
+     
+     
+             
+         def draw(self):
+             
+             #clear picture
+             self.win.fill( (255,255,255) )
+     
+             #draw the pictures
+     	     
+             for graph in self.bombs:
+                 graph.draw()
+               
+             self.player.draw()
+     
+             pygame.display.update()
+     
+
+         def playGame(self):
+             
+             while(self.runGame):
+                 self.handleKeyBoardInput()
+           
+                 self.draw()
+             
+          	 #sleep till next picture
+                 time.sleep(.05)
+     
+                 #update for the next picture
+                 for graph in self.bombs:
+                     graph.update()
+
+             print "You got Hit"
+         
+          
+
+One last touch
+--------------
+
+Our present game is a good start.  However, the Bombs leave the screen and tend not to return.  This means if you can survive the beginning moments of the game, the difficulty quickly drops off.  Since the movement code is in the WanderingSprite class, that is where we should fix it.
+
+Inside the update, we use an if statement to determine if the sprite has left the screen.  The next thing we do is correct for leaving the screen by calling `moveBy` in the opposite direction.  Finally we call `_setRandomDirection()` to alter the direction we will move next frame.  The result is a fairly entertaining game.  Try to think how we could expand it to add bombs over time.
+
+  .. sourcecode:: python3 
+     :linenos:
+
+     class WanderingSprite(Sprite):
+         """ 
+             sprite that starts at an initial position 
+     	and 'walks' in one direction.
+         """
+     
+         def __init__(self,obj):
+             self.obj = obj
+             self._setRandomDirection()
+
+         def _setRandomDirection(self):
+             self.countdown = random.randint(10,100)
+             
+             self.x = random.randint(-6,6)
+             self.y = random.randint(-6,6)
+     
+             if(self.x == 0 and self.y ==0):
+                 #avoid objects that don't move at all
+                 self.y = 1
+
+         #override
+         def draw(self):
+     	    """ draw sprite to screen """
+     	    self.obj.draw()
+     
+         #override
+         def update(self):
+                 """ updates the state of the sprite """
+                 if(self.countdown<0):
+                     self._setRandomDirection()
+                 self.countdown = self.countdown - 1
+                 self.obj.moveBy(self.x,self.y)
+                 pos = self.obj.getPos()
+                 if(pos[0]>400 or pos[0]<0 or pos[1]<0 or pos[1]>400):
+                     self.obj.moveBy(-self.x,-self.y)
+                     self._setRandomDirection()
+     
+Glossary
+--------

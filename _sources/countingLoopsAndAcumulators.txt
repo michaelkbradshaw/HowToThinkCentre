@@ -1,0 +1,595 @@
+..  Copyright (C)  Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.3
+    or any later version published by the Free Software Foundation;
+    with Invariant Sections being Foreword, Preface, and Contributor List, no
+    Front-Cover Texts, and no Back-Cover Texts.  A copy of the license is
+    included in the section entitled "GNU Free Documentation License".
+ 
+|
+
+Iteration
+=========
+
+.. index:: iteration, assignment, assignment statement, reassignment
+
+.. index::
+    single: statement; assignment
+   
+    
+Computers are often used to automate repetitive tasks. Repeating identical or
+similar tasks without making errors is something that computers do well and
+people do poorly.
+
+Repeated execution of a set of statements is called **iteration**.  Because
+iteration is so common, Python provides several language features to make it
+easier. We've already seen the ``for`` statement in chapter 3.  This the 
+the form of iteration you'll likely be using most often.  But in this chapter
+we've going to look at the ``while`` statement --- another way to have your
+program do iteration, useful in slightly different circumstances.
+
+Before we do that, let's just review a few ideas...
+
+Reassignment
+------------ 
+
+As we have mentioned previously, it is legal to make more than one assignment to the
+same variable. A new assignment makes an existing variable refer to a new value
+(and stop referring to the old value).
+
+    .. sourcecode:: python3
+        :linenos:
+        
+        bruce = 5
+        print(bruce)
+        bruce = 7
+        print(bruce)
+
+The output of this program is:
+
+    .. sourcecode:: pycon
+
+        5
+        7
+
+because the first time ``bruce`` is
+printed, its value is 5, and the second time, its value is 7.  
+
+Here is what **reassignment** looks like in a state snapshot:
+
+    .. image:: illustrations/mult_assign.png
+       :alt: reassignment 
+
+With reassignment it is especially important to distinguish between an
+assignment statement and a boolean expression that tests for equality. 
+Because Python uses the equal token (``=``) for assignment, 
+it is tempting to interpret a statement like
+``a = b`` as a boolean test.  Unlike mathematics, it is not!  Remember that the Python token
+for the equality operator is ``==``.
+
+Note too that an equality test is symmetric, but assignment is not. For example, 
+if ``a == 7`` then ``7 == a``. But in Python, the statement ``a = 7``
+is legal and ``7 = a`` is not.
+
+Furthermore, in mathematics, a statement of equality is always true.  If ``a == b``
+now, then ``a`` will always equal ``b``. In Python, an assignment statement can make
+two variables equal, but because of the possibility of reassignment, 
+they don't have to stay that way:
+
+    .. sourcecode:: python3
+        :linenos:
+        
+        a = 5
+        b = a    # after executing this line, a and b are now equal
+        a = 3    # after executing this line, a and b are no longer equal
+
+The third line changes the value of ``a`` but does not change the value of
+``b``, so they are no longer equal. (In some programming languages, a different
+symbol is used for assignment, such as ``<-`` or ``:=``, to avoid confusion.  Python
+chose to use the tokens ``=`` for assignment, and ``==`` for equality.  This is a popular
+choice also found in languages like C, C++, Java, and C#.)
+
+
+Updating variables
+------------------
+
+When an assignment statement is executed, the right-hand-side expression (i.e. the 
+expression that comes after the assignment token) is evaluated first.  Then the result of 
+that evaluation is written into the variable on the left hand side, thereby changing it.
+
+One of the most common forms of reassignment is an update, where the new
+value of the variable depends on its old value.
+
+    .. sourcecode:: python3
+        :linenos:
+        
+        n = 5
+        n = 3*n + 1
+
+Line 2 means `get the current value of n, multiply it by three and add one, 
+and put the answer back into n as its new value`.  
+So after executing the two lines above, ``n`` will have the value 16.
+
+If you try to get the value of a variable that doesn't exist yet, you'll get an error:
+
+    .. sourcecode:: python3
+        
+        >>> w = x + 1
+        Traceback (most recent call last):
+          File "<interactive input>", line 1, in 
+        NameError: name 'x' is not defined
+
+Before you can update a variable, you have to **initialize** it, usually with a
+simple assignment:
+
+    .. sourcecode:: python3
+        
+        >>> x = 0
+        >>> x = x + 1
+
+This second statement --- updating a variable by adding 1 to it --- is very common.  
+It is called an **increment** of the variable; subtracting 1 is called a **decrement**.  
+Sometimes programmers also talk about **bumping** a variable, which means the same 
+as incrementing it by 1.
+
+.. index:: for loop
+
+The ``for`` loop revisited
+--------------------------
+
+Recall that the ``for`` loop processes each item in a list.  Each item in
+turn is (re-)assigned to the loop variable, and the body of the loop is executed.
+We saw this example in an earlier chapter:
+
+    .. sourcecode:: python3
+        :linenos:
+
+        for f in ["Joe", "Amy", "Brad", "Angelina", "Zuki", "Thandi", "Paris"]:
+            invitation = "Hi " + f + ".  Please come to my party on Saturday!"
+            print(invitation) 
+        
+Running through all the items in a list is called **traversing** the list,
+or **traversal**.      
+
+Let us write a function now to sum up all the elements in a list of numbers.
+Do this by hand first, and try to isolate exactly what steps you take.  You'll
+find you need to keep some "running total" of the sum so far, either on a piece 
+of paper, or in your head.  Remembering things from one step to the next is
+precisely why we have variables in a program: so we'll need some variable
+to remember the "running total".  It should be initialized with a value of zero,
+and then we need to traverse the items in the list.  For each item, we'll want
+to update the running total by adding the next number to it.
+
+    .. sourcecode::  python
+        :linenos:
+
+        def mysum(xs):
+            """ Sum all the numbers in the list xs, and return the total. """
+            running_total = 0
+            for x in xs:
+                running_total = running_total + x
+            return running_total
+
+        #add tests like these to your test suite ...
+        test(mysum([1, 2, 3, 4]), 10)
+        test(mysum([1.25, 2.5, 1.75]), 5.5)
+        test(mysum([1, -2, 3]), 2)
+        test(mysum([ ]), 0)
+        test(mysum(range(11)), 55)    # 11 is not in the list.
+      
+
+.. index:: program tracing, hand trace, tracing a program
+
+    
+.. index:: abbreviated assignment    
+    
+Abbreviated assignment
+----------------------
+
+Incrementing a variable is so common that Python provides an abbreviated syntax
+for it:
+
+    .. sourcecode:: python3
+        
+        >>> count = 0
+        >>> count += 1
+        >>> count
+        1
+        >>> count += 1
+        >>> count
+        2
+
+``count += 1`` is an abreviation for ``count = count + 1`` . We pronouce the operator
+as *"plus-equals"*.  The increment value does not have to be 1:
+
+    .. sourcecode:: python3
+        
+        >>> n = 2
+        >>> n += 5
+        >>> n
+        7
+
+There are similar abbreviations for ``-=``, ``*=``, ``/=``, ``//=`` and ``%=``:
+
+    .. sourcecode:: python3
+        
+        >>> n = 2
+        >>> n *= 5
+        >>> n
+        10
+        >>> n -= 4
+        >>> n
+        6
+        >>> n //= 2
+        >>> n
+        3
+        >>> n %= 2
+        >>> n
+        1
+
+.. index:: help, meta-notation   
+
+
+
+
+
+
+Tracing a program
+-----------------
+
+To write effective computer programs a programmer needs to develop the ability
+to **trace** the execution of a computer program. Tracing involves becoming the
+computer and following the flow of execution through a sample program run,
+recording the state of all variables and any output the program generates after
+each instruction is executed.
+
+To understand this process, let's trace the call to ``seq3np1(3)`` from the
+previous section. At the start of the trace, we have a local variable, ``n``
+(the parameter), with an initial value of 3. Since 3 is not equal to 1, the
+``while`` loop body is executed. 3 is printed and ``3 % 2 == 0`` is evaluated.
+Since it evaluates to ``False``, the ``else`` branch is executed and
+``3 * 3 + 1`` is evaluated and assigned to ``n``.
+
+To keep track of all this as you hand trace a program, make a column heading on
+a piece of paper for each variable created as the program runs and another one
+for output. Our trace so far would look something like this:
+
+    .. sourcecode:: pycon
+        
+        n               output printed so far
+        --              ---------------------
+        3               3, 
+        10
+
+Since ``10 != 1`` evaluates to ``True``, the loop body is again executed,
+and 10 is printed. ``10 % 2 == 0`` is true, so the ``if`` branch is
+executed and ``n`` becomes 5. By the end of the trace we have:
+
+    .. sourcecode:: pycon
+
+          n               output printed so far
+          --              ---------------------
+          3               3,
+          10              3, 10,
+          5               3, 10, 5,
+          16              3, 10, 5, 16,
+          8               3, 10, 5, 16, 8,
+          4               3, 10, 5, 16, 8, 4,
+          2               3, 10, 5, 16, 8, 4, 2,
+          1               3, 10, 5, 16, 8, 4, 2, 1.
+
+Tracing can be a bit tedious and error prone (that's why we get computers to do
+this stuff in the first place!), but it is an essential skill for a programmer
+to have. From this trace we can learn a lot about the way our code works. We
+can observe that as soon as n becomes a power of 2, for example, the program
+will require log\ :sub:`2`\ (n) executions of the loop body to complete. We can
+also see that the final 1 will not be printed as output within the body of the loop,
+which is why we put the special ``print`` function at the end. 
+
+Tracing a program is, of course, related to single-stepping through your code
+and being able to inspect the variables. Using the computer to **single-step** for you is
+less error prone and more convenient. 
+Also, as your programs get more complex, they might execute many millions of 
+steps before they get to the code that you're really interested in, so manual tracing 
+becomes impossible.  Being able to set a **breakpoint** where you need
+one is far more powerful. So we strongly encourage you to invest time in
+learning using to use your programming environment (PyScripter, in these notes) to full
+effect. 
+
+There are also some great visualization tools becoming available to help you 
+trace and understand small fragments of Python code.  The one we recommend is at 
+http://netserv.ict.ru.ac.za/python3_viz 
+
+We've cautioned
+against chatterbox functions, but used them here.  As we learn a bit more Python, we'll
+be able to show you how to generate a list of values to hold the sequence, rather than having
+the function print them. Doing this would remove the need to have all these pesky ``print`` functions
+in the middle of our logic, and will make the function more useful.
+
+
+
+
+
+Glossary
+--------
+
+.. glossary::
+
+
+    algorithm
+        A step-by-step process for solving a category of problems.
+
+    body
+        The statements inside a loop.
+        
+    breakpoint
+        A place in your program code where program execution will pause (or break),
+        allowing you to inspect the state of the program's variables, or single-step
+        through individual statements, executing them one at a time. 
+        
+    bump
+        Programmer slang. Synonym for increment.
+
+    counter
+        A variable used to count something, usually initialized to zero and
+        incremented in the body of a loop.
+
+    cursor
+        An invisible marker that keeps track of where the next character will
+        be printed.
+
+    decrement
+        Decrease by 1.
+
+    definite iteration
+        A loop where we have an upper bound on the number of times the 
+        body will be executed.  Definite iteration is usually best coded
+        as a ``for`` loop.    
+        
+    development plan
+        A process for developing a program. In this chapter, we demonstrated a
+        style of development based on developing code to do simple, specific
+        things and then encapsulating and generalizing.
+
+    encapsulate
+        To divide a large complex program into components (like functions) and
+        isolate the components from each other (by using local variables, for
+        example).
+
+    escape sequence
+        An escape character, \\, followed by one or more printable characters
+        used to designate a nonprintable character.
+
+    generalize
+        To replace something unnecessarily specific (like a constant value)
+        with something appropriately general (like a variable or parameter).
+        Generalization makes code more versatile, more likely to be reused, and
+        sometimes even easier to write.
+
+    increment
+        Both as a noun and as a verb, increment means to increase by 1.
+
+    infinite loop
+        A loop in which the terminating condition is never satisfied.
+
+    indefinite iteration
+        A loop where we just need to keep going until some condition is met.
+        A ``while`` statement is used for this case.      
+        
+    initialization (of a variable)
+        To initialize a variable is to give it an initial value.  
+        Since in Python variables don't exist
+        until they are assigned values, they are initialized when they are
+        created.  In other programming languages this is not the case, and
+        variables can be created without being initialized, in which case they
+        have either default or *garbage* values.
+
+    iteration
+        Repeated execution of a set of programming statements.
+
+    loop
+        A statement or group of statements that execute repeatedly until a
+        terminating condition is satisfied.
+
+    loop variable
+        A variable used as part of the terminating condition of a loop.
+     
+    meta-notation
+        Extra symbols or notation that helps describe other notation. Here we introduced
+        square brackets, ellipses, italics, and bold as meta-notation to help 
+        describe optional, repeatable, substitutable and fixed parts of the Python syntax.
+     
+    middle-test loop
+        A loop that executes some of the body, then tests for the exit condition, 
+        and then may execute some more of the body.  We don't have a special 
+        Python construct for this case, but can 
+        use ``while`` and ``break`` together.
+    
+    nested loop
+        A loop inside the body of another loop.
+    
+    newline
+        A special character that causes the cursor to move to the beginning of
+        the next line.
+
+    post-test loop
+        A loop that executes the body, then tests for the exit condition.  We don't have a special
+        Python construct for this, but can use ``while`` and ``break`` together.
+        
+    pre-test loop
+        A loop that tests before deciding whether the execute its body.  ``for`` and ``while``
+        are both pre-test loops.    
+        
+    reassignment
+        Making more than one assignment to the same variable during the
+        execution of a program.
+    
+    single-step
+        A mode of interpreter execution where you are able to execute your 
+        program one step at a time, and inspect the consequences of that step. 
+        Useful for debugging and building your internal mental model of what is
+        going on.
+     
+    tab
+        A special character that causes the cursor to move to the next tab stop
+        on the current line.
+        
+    trichotomy
+        Given any real numbers *a* and *b*, exactly one of the following
+        relations holds: *a < b*, *a > b*, or *a == b*. Thus when you can
+        establish that two of the relations are false, you can assume the
+        remaining one is true.
+
+    trace
+        To follow the flow of execution of a program by hand, recording the
+        change of state of the variables and any output produced.
+
+        
+Exercises
+---------
+
+This chapter showed us how to sum a list of items, 
+and how to count items.  The counting example also had an ``if`` statement
+that let us only count some selected items.  In the previous
+chapter we also showed a function ``find_first_2_letter_word`` that allowed
+us an "early exit" from inside a loop by using ``return`` when some condition occurred.  
+We now also have ``break`` to exit a loop (but not the enclosing function, and 
+``continue`` to abandon the current iteration of the loop without ending the loop.
+
+Composition of list traversal, summing, counting, testing conditions
+and early exit is a rich collection of building blocks that can be combined
+in powerful ways to create many functions that are all slightly different.  
+
+The first six questions are typical functions you should be able to write using only
+these building blocks.
+   
+#. Write a function to count how many odd numbers are in a list.
+#. Sum up all the even numbers in a list.
+#. Sum up all the negative numbers in a list.
+#. Count how many words in a list have length 5.
+#. Sum all the elements in a list up to but not including the first even number.
+   (Write your unit tests.  What if there is no even number?)
+#. Count how many words occur in a list up to and including the first occurrence of the word "sam".
+   (Write your unit tests for this case too.  What if "sam" does not occur?)
+   
+#. Add a print function to Newton's ``sqrt`` function that
+   prints out ``better`` each time it is calculated. Call your modified
+   function with 25 as an argument and record the results.
+   
+#. Trace the execution of the last version of ``print_mult_table`` and figure
+   out how it works.
+   
+#. Write a function ``print_triangular_numbers(n)`` that prints out the first
+   n triangular numbers. A call to ``print_triangular_numbers(5)`` would
+   produce the following output::
+    
+       1       1
+       2       3
+       3       6
+       4       10
+       5       15
+
+   (*hint: use a web search to find out what a triangular number is.*)
+   
+   
+#. Write a function, ``is_prime``, which takes a single integer argument
+   and returns ``True`` when the argument is a *prime number* and ``False``
+   otherwise. Add tests for cases like this::
+   
+       test(is_prime(11), True)
+       test(is_prime(35), False)
+       test(is_prime(19911129), True)
+   
+   The last case could represent your birth date.  Were you born on a prime day?
+   In a class of 100 students, how many do you think would have prime birth dates?
+   
+#. Revisit the drunk student problem from the exercises in chapter 3. 
+   This time, the drunk student makes a turn, and then takes some steps forward, and repeats this. 
+   Our social science student now records `pairs` of data: the angle of each turn, and the number
+   of steps taken after the turn.  Her experimental data is 
+   [(160, 20), (-43, 10), (270, 8), (-43, 12)].  Use a turtle to draw the path taken by our drunk friend.
+
+#. Many interesting shapes can be drawn by the turtle by giving a list of pairs like we did
+   above, where the first item of the pair is the angle to turn, and the second item is
+   the distance to move forward.  Set up a list of pairs so that the turtle draws a 
+   house with a cross through the centre, as show here. 
+   This should be done without going over any of the lines / edges more than once,
+   and without lifting your pen.
+
+   .. image:: illustrations/tess_house.png
+   
+#. Not all shapes like the one above can be drawn without lifting your pen, or going over
+   an edge more than once.  Which of these can be drawn?  
+
+   .. image:: illustrations/tess_more_houses.png
+   
+   Now read Wikipedia's article(http://en.wikipedia.org/wiki/Eulerian_path) about Eulerian paths.  
+   Learn how to tell immediately by inspection whether it is possible to find a solution or not. 
+   If the path is possible, you'll also know where to put your pen to start drawing, and where 
+   you should end up!    
+      
+#. What will ``num_digits(0)`` return? Modify it to return ``1`` for this
+   case. Why does a call to ``num_digits(-24)`` result in an infinite loop?
+   (*hint: -1//10 evaluates to -1*)  Modify ``num_digits`` so that it works
+   correctly with any integer value. Add these tests::
+
+       test(num_digits(0), 1)
+       test(num_digits(-12345), 5)
+
+#. Write a function ``num_even_digits(n)`` that counts the number
+   of even digits in ``n``.  These tests should pass::
+
+       test(num_even_digits(123456), 3)
+       test(num_even_digits(2468), 4)
+       test(num_even_digits(1357), 0)
+       test(num_even_digits(0), 1)
+
+#. Write a function ``sum_of_squares(xs)`` that computes the sum
+   of the squares of the numbers in the list ``xs``.  For example,
+   ``sum_of_squares([2, 3, 4])`` should return 4+9+16 which is 29::
+    
+       test(sum_of_squares([2, 3, 4]), 29) 
+       test(sum_of_squares([ ]), 0)
+       test(sum_of_squares([2, -3, 4]), 29)
+       
+#. You and your friend are in a team to write a two-player game, 
+   human against computer, such as Tic-Tac-Toe / Noughts and Crosses.  
+   Your friend will write the logic to play one round of the game, while you will
+   write the logic to allow many rounds of play, keep score, decide who
+   plays, first, etc.  The two of you negotiate on how the two parts of the 
+   program will fit together, and you come up with this simple 
+   scaffolding (which your friend will improve later):
+   
+       .. sourcecode:: python3
+           :linenos:
+       
+           # your friend will complete this function
+           def play_once(human_plays_first):  
+               """ 
+                  Must play one round of the game. If the parameter
+                  is True, the human gets to play first, else the 
+                  computer gets to play first.  When the round ends, 
+                  the return value of the function is one of 
+                  -1 (human wins),  0 (game drawn),   1 (computer wins).
+               """
+               # This is all dummy scaffolding code right at the moment...
+               import random                  # see ch 10 for details 
+               rng = random.Random()
+               # pick a random result between -1 and 1.
+               result = rng.randrange(-1,2)   
+               print("Human plays first={0},  winner={1} " 
+                                  .format(human_plays_first, result))
+               return result
+           
+   a. Write the main program which repeatedly calls this function to play 
+      the game, and after each round it announces the outcome as "I win!", "You win!", or "Game drawn!".
+      It then asks the player "Do you want to play again?" and either plays again,
+      or says "Goodbye", and terminates.
+   b. Keep score of how many wins each player has had, and how many draws there have been.
+      After each round of play, also announce the scores.
+   c. Add logic so that the players take turns to play first.
+   d. Compute the percentage of wins for the human, out of all games played.  Also announce this
+      at the end of each round. 
+   e. Draw a flowchart of your logic.  
+   
+           

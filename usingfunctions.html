@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. Using Functions for Fun and Profit &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="4. Creating Functions For World Domination" href="functions.html" />
+    <link rel="prev" title="2. Variables, expressions and statements" href="variables_expressions_statements.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="functions.html" title="4. Creating Functions For World Domination"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="variables_expressions_statements.html" title="2. Variables, expressions and statements"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="using-functions-for-fun-and-profit">
+<h1>3. Using Functions for Fun and Profit<a class="headerlink" href="#using-functions-for-fun-and-profit" title="Permalink to this headline">¶</a></h1>
+<p>If you been paying attention, we have used functions several (the type
+function, type converter functions, and the input function). While you
+probably have an intuitive understanding of functions from your algebra
+class, we need to provide a formal framework in order to simplify your
+understanding of what a function can and can&#8217;t do.  In this section we
+will talk about using the functions that others have made for us to
+use.  In the next chapter we will teach you how to create your own
+functions.</p>
+<div class="section" id="functions-are-mini-programs">
+<h2>3.1. Functions are mini-programs<a class="headerlink" href="#functions-are-mini-programs" title="Permalink to this headline">¶</a></h2>
+<p>Functions are a special type of variable.  Where a <em>Variable</em> stores a
+value, a <em>Function</em> stores a computation. When we use a variable in an expression,
+the computer interprets the
+variable as the value it represents. When we use a function, the
+stored computation is executed. The computer interprets the function
+as the result of that computation.</p>
+<p>The act of using the computation of a function is <strong>calling the
+function</strong>.  You can think of it as the interpreter summoning the code
+in order to perform an execution.  In this way, we can think of
+functions as mini programs that use the IPO algorithm. Some
+programming languages even call functions, <em>subprograms</em>. When we call
+a function we must keep track of three things.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>What input do I need?</li>
+<li>What will the function do with that input?</li>
+<li>What will the function return as an output?</li>
+</ol>
+</div></blockquote>
+<div class="section" id="function-input-arguments">
+<h3>3.1.1. Function Input : Arguments<a class="headerlink" href="#function-input-arguments" title="Permalink to this headline">¶</a></h3>
+<p>While there are functions that do not have any inputs, most function
+require at least one input.  The inputs to a function are called
+<em>arguments</em>.  Arguments can be values, variables or even other functions.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">0.14112000806</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">asin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">0.14159265359</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span> <span class="n">asin</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">0.5</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In line 1 we see that <tt class="docutils literal"><span class="pre">3</span></tt> is the arguement, input, to the sin function.
+In line 4 and line 7 we see a varible and a function respectivly used as an arguement
+for a function.</p>
+<p>Many functions have multiple arguments.  Multiple arguments are
+separated by commas in the function call.  For instance, the
+&#8216;&#8217;pow&#8217;&#8217; function takes two parameters, the base and the
+exponent. Think of the argument list as the casting for a play.  In
+the play Romeo and Juliet, the first slot goes to the person that
+plays Romeo. The second slot goes to the person that plays Juliet.  If
+there was a function called &#8216;&#8217;doPlay&#8217;&#8216;, &#8216;&#8217;doPlay(&#8220;mark&#8221;,&#8221;jill&#8221;)&#8217;&#8217;
+would cast Mark in the role of Romeo and Jill in the role of Juliet.</p>
+<p>The play would be much different if the director called
+<tt class="docutils literal"><span class="pre">doPlay(&quot;jill&quot;,&quot;mark&quot;)</span></tt> or even <tt class="docutils literal"><span class="pre">doPlay(&quot;tim&quot;,&quot;mark&quot;)</span></tt>.  If this
+is the director&#8217;s intent, the play will have an interesting story to
+tell.  If not, the director will be embarrassed. Observe the effects
+when the pow function is called without thinking about the ordering or
+the inputs.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">81.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">64.0</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="function-output-return">
+<span id="index-0"></span><h3>3.1.2. Function Output : Return<a class="headerlink" href="#function-output-return" title="Permalink to this headline">¶</a></h3>
+<p>All functions have to return something.  In most cases,
+the returned value is the result of the calculation performed.  For
+instance calling <tt class="docutils literal"><span class="pre">cos(0)</span></tt>, would return <tt class="docutils literal"><span class="pre">1</span></tt>. We call functions
+to get the results of those calculations. The 2 most common uses
+of calling functions, are to store the result to a variable to print
+it out (Line 3) or to use the result of the function inside another function(line 2).</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">asin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">0.14159265359</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>While all functions must return something, there are many functions
+that do not return anything useful. This seems odd, but these
+functions tend to be associated with more complex structures or provide
+output in some other fashion.  At the end of this chapter we will work
+with many functions that do not return anything useful, but instead
+draw graphical output.</p>
+<p>So if a function doesn&#8217;t have anything useful to return what should it
+do?  Python has a special Type called <strong>None</strong>. None is the
+representation of nothing.   When a function has nothing to say, it
+returns None. If you try to print it out you will see the string
+<tt class="docutils literal"><span class="pre">None</span></tt>. Otherwise, any actions you do with None, will raise an
+error. As a rule of thumb, when you call a function, make sure that
+you understand what will be returned.</p>
+</div>
+</div>
+<div class="section" id="modules">
+<span id="index-1"></span><h2>3.2. Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<p>In order to go further we are presented with a dilemma.  How can we
+use functions, if we haven&#8217;t made any functions yet? The good news is
+that the Python language comes with many <strong>modules</strong> filled with
+functions ready to use. A <strong>module</strong> is a file containing Python
+definitions and statements intended for use in other Python
+programs. There are many Python modules that come with Python as part
+of the <strong>standard library</strong>.</p>
+<p>There are two ways to retrieve functions from a module. The first
+technique is preferred. To import the math module, which contains all
+of the calculator functions, type <tt class="docutils literal"><span class="pre">import</span> <span class="pre">math</span></tt> at the top of your
+script.  Then if you want to use a function from the module you type <tt class="docutils literal"><span class="pre">math.</span></tt>
+before the function. For instance to find the sine of 2, you
+would type <tt class="docutils literal"><span class="pre">math.sin(2)</span></tt>.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">math</span>
+<span class="nb">print</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>A second technique exists and is used as a time-saving technique.  If
+you will repeatedly use a function, typing out the module name every
+time you want to use the function can be cumbersome.  The alternative
+form would look like this <tt class="docutils literal"><span class="pre">from</span> <span class="pre">math</span> <span class="pre">import</span> <span class="pre">sin</span></tt>.  This command
+places the function sin into your file.  To find the sin of 2, you
+would just type <tt class="docutils literal"><span class="pre">sin(2)</span></tt>.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span>
+<span class="nb">print</span> <span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We can go even further with this second technique.  If we need to use
+many functions from a particular module, we can load all of the
+functions using the wildcard <tt class="docutils literal"><span class="pre">*</span></tt> in place of the function.  It would
+look like this: <tt class="docutils literal"><span class="pre">form</span> <span class="pre">math</span> <span class="pre">import</span> <span class="pre">*</span></tt>.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span>
+<span class="nb">print</span> <span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">ceil</span><span class="p">(</span><span class="mf">45.6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="math-module">
+<h2>3.3. Math module<a class="headerlink" href="#math-module" title="Permalink to this headline">¶</a></h2>
+<p>The math module contains all of the functions you would expect from a
+calculator.  Rather than write out everything the module can do, this
+is a perfect time for you to learn how to find out for yourself.  If
+you are running IDLE right now, click on Help-&gt;Python
+Docs. Alternatively you can find the documentation online at
+<a class="reference external" href="http://docs.python.org/">http://docs.python.org/</a>.  On the first page, scroll down and look for
+Global Module Index.  When you click on it, you will about a hundred
+different  modules that are part of Python.  Scroll down and click on
+math.  Read the trigonometric functions section.  Go ahead I&#8217;ll wait.</p>
+<img alt="picture of clock" src="_images/waitForWork.png" />
+<p>Recall that there are three things that you need to know about a
+function.  These descriptions will answer those three questions. I&#8217;ll
+include one function description below to reference. The first thing
+we see is the <em>function signature</em>, the name of the function and the
+parameters that it needs.  When a function is named properly, you can
+almost figure out  what the function will do.  But read further, see
+how each of those descriptions tells you what the function returns and
+how the parameters influence that result.</p>
+<dl class="glossary docutils">
+<dt id="term-math-acos-x">math.acos(x)</dt>
+<dd>Return the arc cosine of x, in radians.</dd>
+</dl>
+<p>Go back and read the rest of the math help page.  I would recommend reading
+the function signatures first.  If you can tell what the function
+does, skip the description and go to the next one.  Otherwise, read
+the description.  Your goal right now is not to memorize the module
+libraries but to learn how to read module libraries and to feel
+comfortable looking up functions.  If you are curious about what other
+modules will be important, I recommend looking up the random and time
+modules.  Sometimes knowing a tool exists can dramatically change the
+approach you take to a problem.</p>
+</div>
+<div class="section" id="pygame-module">
+<span id="index-2"></span><h2>3.4. Pygame module<a class="headerlink" href="#pygame-module" title="Permalink to this headline">¶</a></h2>
+<p>We will spend the rest of this chapter learning some basics about the
+Pygame module.  Pygame is bare-bones library designed for creating
+video games that can run on several different systems.  We will make
+use of Pygame throughout the rest of the book, so taking some time to
+get the basics will pay off. Each time we revisit Pygame we will
+learn more functions or learn new ways to use the functions we have
+learned.</p>
+<p>If you don&#8217;t have Pygame installed on your system, you will need to download it from
+<a class="reference external" href="http://www.pygame.org/download.shtml">http://www.pygame.org/download.shtml</a>.  At the time of writing this,
+Pygame is not officially supported by Python 3. (It is close but you
+will need to fake it).  Until that date, go ahead and down load Python
+2 and Pygame to set them up on your system.</p>
+<div class="section" id="overview-of-pygame-graphics">
+<h3>3.4.1. Overview of Pygame graphics<a class="headerlink" href="#overview-of-pygame-graphics" title="Permalink to this headline">¶</a></h3>
+<p>Computer graphics have some underlying realities that shape the way in
+which we interact with them. That reality is that images are composed
+in a 2 dimensional grid of <strong>pixels</strong>.  Each pixel has one color,
+composed of red,green, and blue. Pixels also have a location in the 2
+dimensional grid.  Like the grid you used in your algebra class, each
+point is an x,y coordinate. The x&#8217;s start at 0 on the left and
+increase as you go farther right.  Unlike the coordinate system you
+learned in algebra, y&#8217;s start at 0 at the top and increase as you go
+down the screen.</p>
+<img alt="graphics coordinate systems have the origin in the upper left hand corner." src="_images/coordSystem.png" />
+<p>Unlike most other modules, Pygame requires many start up operations
+before it can run many of the other functions. For this reason the
+<tt class="docutils literal"><span class="pre">init()</span></tt> function should be the first Pygame function you call in
+any Pygame program.  Similarly,  You should call the <tt class="docutils literal"><span class="pre">quit()</span></tt>
+function when your program closes.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="c">#drawing stuff goes here</span>
+<span class="c"># could be a lot of it...</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="supporting-types">
+<h3>3.4.2. Supporting types<a class="headerlink" href="#supporting-types" title="Permalink to this headline">¶</a></h3>
+<p>We need to learn some new types before we can call the functions that
+will draw our pictures.</p>
+<div class="section" id="color">
+<h4>3.4.2.1. Color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h4>
+<p>Each Pixel has a color and many functions will use a color as an arguement.
+Color is a type, just like int, float, or string.
+Since Color is more complex, we have to
+use a function to create a Color variable. To create a Color, you need
+to provide 3 parameters: red,green,blue. Each of these parameters
+indicates how much of each light color , red,green,blue is present in
+the final color. Values for the parameters must be integers between 0
+and 255. There are many sites that list the red, green, and blue components of common colors.  Here is one site <a class="reference external" href="http://www.web-source.net/216_color_chart.htm">http://www.web-source.net/216_color_chart.htm</a>.</p>
+<p>Many Pygame developers will create variables to represent
+each color at the beginning of their code so they can reuse them as
+needed. Since the variables will not be changed during the program, it
+is a convention to capitalize them (not a rule though).</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">RED_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">GOLDENROD_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">218</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="n">BLACK_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c">#use colors</span>
+<span class="nb">input</span><span class="p">(</span><span class="s">&quot;press enter to exit&quot;</span><span class="p">)</span> <span class="c">#use raw_input() for python 2</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tuple-type">
+<h4>3.4.2.2. Tuple Type<a class="headerlink" href="#tuple-type" title="Permalink to this headline">¶</a></h4>
+<p>Each pixel has an x,y coordinate where it will be placed.  Rather than
+pass around two variables, Pygame wants to deal with x and y in the
+same variable.  To do this Pygame uses <strong>tuples</strong>.  Tuples are
+<strong>Sequences</strong> of values.  They are used to pass around data. You can
+form a tuple by using <tt class="docutils literal"><span class="pre">,</span></tt> to separate values.  It is a convention to
+also place tuples in parentheses when you define the variable.  When a
+tuple is printed it will be displayed in parenthesis.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">45</span>
+<span class="n">centerPoint</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c">#another way to do it</span>
+<span class="n">samePoint</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span>
+
+<span class="c">#a more direct approach</span>
+<span class="n">againPoint</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">45</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The final thing
+to keep in mind is that tuples are part of the python language.  You
+will find several uses of tuples in the future.</p>
+</div>
+<div class="section" id="font-type">
+<span id="index-3"></span><h4>3.4.2.3. Font Type<a class="headerlink" href="#font-type" title="Permalink to this headline">¶</a></h4>
+<p>Font is the description of how text should look when it is drawn. To
+create a font object we must call the Font function and describe what
+font and what size the font should be.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="c"># Instantiate 16 point Courier font to draw text.</span>
+<span class="n">myFont</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">SysFont</span><span class="p">(</span><span class="s">&#39;Courier&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="surface-type">
+<h4>3.4.2.4. Surface Type<a class="headerlink" href="#surface-type" title="Permalink to this headline">¶</a></h4>
+<p>Pygame uses surfaces objects to represent a 2 dimensional grid of
+pixels.  Surfaces are the workhorse of Pygame to draw things to the
+screen. There are many ways to create Surfaces. Here are three
+functions to create a surface object.  As you learn more about Pygame,
+you will find other ways to create a surface object.  The first
+function (line 8) creates the window, the second function (line 11) loads an image
+from a file, and the third function (line 16) will place a text message on a
+surface.</p>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">GOLDENROD_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">218</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+<span class="c">#window is a surface. If I change window, the screen will change</span>
+<span class="n">windowSurf</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+
+<span class="c">#head image is a surface that has one image</span>
+<span class="n">headSurf</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;bradshaw.jpg&quot;</span><span class="p">)</span>
+
+
+<span class="c"># Instantiate 16 point Courier font to draw text.</span>
+<span class="n">myFont</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">SysFont</span><span class="p">(</span><span class="s">&#39;Courier&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">fontSurf</span> <span class="o">=</span> <span class="n">myFont</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;We&#39;re learning PyGame&quot;</span><span class="p">,</span><span class="k">False</span><span class="p">,</span><span class="n">GOLDENROD_COLOR</span><span class="p">)</span>
+
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+<div class="section" id="drawing-to-the-screen">
+<h3>3.4.3. Drawing to the Screen<a class="headerlink" href="#drawing-to-the-screen" title="Permalink to this headline">¶</a></h3>
+<p>we are almost to the point where we can draw things to the screen. We
+have two ways to draw.  First we can <strong>blit</strong> one surface onto another
+surface. If you have images or fonts this is the only way to get them
+to show up. The second technique is to use the draw functions to draw
+graphics primitives (circles, polygons, lines, rectangles, ellipses) to a surface.</p>
+<p>Blitting is the act of copying the pixels from one surface and placing
+them on another surface. The notation to do this is a bit odd,
+<tt class="docutils literal"><span class="pre">destinationSurfaceObj.blit(sourceSurfaceObject,destPoint)</span></tt>.  Recall
+that surfaces are complex types (commonly called a class).  These
+types have not only data but functions built into them.  <tt class="docutils literal"><span class="pre">blit()</span></tt> is
+part of Surface, (in much the same way that sin is part of the math
+module.  We will explore these complex types at more depth later in
+the class, but for now we&#8217;ll settle for a surface understanding.)</p>
+<p>Drawing is done by functions.    As you did with the math module, you will need to look up the functions.
+You can find all of the draw funcitons here
+<a class="reference external" href="http://www.pygame.org/docs/ref/draw.html">http://www.pygame.org/docs/ref/draw.html</a>.
+Each function requires different parameters.
+You&#8217;ll be able to find the necessary arguments to make your programs work.
+.. MKB FIXME
+Rect shows up in several of the argument lists. You can use a 4-tuple, a tuple with 4 elements.
+The first two coordinates are the top-left x,y coordinate.
+The last two coordinates are the width and the height of the rectangle.  There is a Rect type, that will be useful in the future but is overkill right now, <a class="reference external" href="http://www.pygame.org/docs/ref/rect.html">http://www.pygame.org/docs/ref/rect.html</a>.</p>
+<p>The final step to draw to the screen is to place a command to update,
+<tt class="docutils literal"><span class="pre">pygame.display.update()</span></tt>.  Until you do this, none of the changes
+you have done to the windowSurface will show up to the screen.  Another
+<strong>side effect</strong> is that the surface will be wiped clean.  This will
+become important when we discuss animation.  For now we will only look
+at creating an image up on the screen.  I&#8217;ll share a small example
+program that will demonstrate many of the topics we discussed.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="n">BG_COLOR</span>   <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+<span class="n">BODY_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">FLESH_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">125</span><span class="p">,</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">BLACK_COLOR</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="c">#create window</span>
+<span class="n">windowSurface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s">&quot;Bradshaw the Robot&quot;</span><span class="p">)</span>
+<span class="n">windowSurface</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">BG_COLOR</span><span class="p">)</span>
+
+<span class="c">#body</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">ellipse</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">BLACK_COLOR</span><span class="p">,</span> \
+                                          <span class="p">(</span><span class="mi">315</span><span class="p">,</span><span class="mi">125</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">260</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">ellipse</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">BODY_COLOR</span><span class="p">,</span> \
+                                          <span class="p">(</span><span class="mi">320</span><span class="p">,</span><span class="mi">130</span><span class="p">,</span><span class="mi">140</span><span class="p">,</span><span class="mi">250</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+<span class="c">#face</span>
+<span class="n">headSurface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;bradshaw.jpg&quot;</span><span class="p">)</span>
+<span class="n">windowSurface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">headSurface</span><span class="p">,(</span><span class="mi">300</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c">#arms</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">BLACK_COLOR</span><span class="p">,</span> \
+                                          <span class="p">(</span><span class="mi">455</span><span class="p">,</span><span class="mi">225</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">110</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">BODY_COLOR</span><span class="p">,</span> \
+                                          <span class="p">(</span><span class="mi">460</span><span class="p">,</span><span class="mi">230</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">BLACK_COLOR</span><span class="p">,</span> \
+                                          <span class="p">(</span><span class="mi">295</span><span class="p">,</span><span class="mi">225</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">110</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">BODY_COLOR</span><span class="p">,</span> \
+                                          <span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">230</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+<span class="c">#hands</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">FLESH_COLOR</span><span class="p">,</span>\
+                                   <span class="p">(</span><span class="mi">310</span><span class="p">,</span><span class="mi">330</span><span class="p">),</span><span class="mi">15</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="n">FLESH_COLOR</span><span class="p">,</span>\
+                                   <span class="p">(</span><span class="mi">470</span><span class="p">,</span><span class="mi">330</span><span class="p">),</span><span class="mi">15</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="c">#text</span>
+<span class="n">font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">SysFont</span><span class="p">(</span><span class="s">&quot;Courier&quot;</span><span class="p">,</span><span class="mi">24</span><span class="p">)</span>
+<span class="n">messageSurface</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s">&quot;I am not a robot&quot;</span><span class="p">,</span><span class="k">False</span><span class="p">,</span><span class="n">BLACK_COLOR</span><span class="p">)</span>
+<span class="n">windowSurface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">messageSurface</span><span class="p">,(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c">#save picture to a file</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">windowSurface</span><span class="p">,</span><span class="s">&quot;robot.png&quot;</span><span class="p">)</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+<span class="c">#for python 3, use input instead</span>
+<span class="n">raw_input</span><span class="p">(</span><span class="s">&quot;Press enter to exit&quot;</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>You can run the code above, substitute a picture of yourself in place
+of bradshaw.jpg. Make sure your picture is in the same directory as
+your code.  If all goes well you should see something like the
+following image.</p>
+<blockquote>
+<div><img alt="picture from the python code" src="_images/robot_bradshaw.png" />
+</div></blockquote>
+<span class="target" id="index-4"></span></div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="functions.html" title="4. Creating Functions For World Domination"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="variables_expressions_statements.html" title="2. Variables, expressions and statements"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

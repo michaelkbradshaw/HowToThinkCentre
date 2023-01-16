@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Iteration &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="iteration">
+<h1>Iteration<a class="headerlink" href="#iteration" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="index-0"></span><p id="index-1">Computers are often used to automate repetitive tasks. Repeating identical or
+similar tasks without making errors is something that computers do well and
+people do poorly.</p>
+<p>Repeated execution of a set of statements is called <strong>iteration</strong>.  Because
+iteration is so common, Python provides several language features to make it
+easier. We&#8217;ve already seen the <tt class="docutils literal"><span class="pre">for</span></tt> statement in chapter 3.  This the
+the form of iteration you&#8217;ll likely be using most often.  But in this chapter
+we&#8217;ve going to look at the <tt class="docutils literal"><span class="pre">while</span></tt> statement &#8212; another way to have your
+program do iteration, useful in slightly different circumstances.</p>
+<p>Before we do that, let&#8217;s just review a few ideas...</p>
+<div class="section" id="reassignment">
+<h2>Reassignment<a class="headerlink" href="#reassignment" title="Permalink to this headline">¶</a></h2>
+<p>As we have mentioned previously, it is legal to make more than one assignment to the
+same variable. A new assignment makes an existing variable refer to a new value
+(and stop referring to the old value).</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bruce</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bruce</span><span class="p">)</span>
+<span class="n">bruce</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bruce</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The output of this program is:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">5</span>
+<span class="go">7</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>because the first time <tt class="docutils literal"><span class="pre">bruce</span></tt> is
+printed, its value is 5, and the second time, its value is 7.</p>
+<p>Here is what <strong>reassignment</strong> looks like in a state snapshot:</p>
+<blockquote>
+<div><img alt="reassignment" src="_images/mult_assign.png" />
+</div></blockquote>
+<p>With reassignment it is especially important to distinguish between an
+assignment statement and a boolean expression that tests for equality.
+Because Python uses the equal token (<tt class="docutils literal"><span class="pre">=</span></tt>) for assignment,
+it is tempting to interpret a statement like
+<tt class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b</span></tt> as a boolean test.  Unlike mathematics, it is not!  Remember that the Python token
+for the equality operator is <tt class="docutils literal"><span class="pre">==</span></tt>.</p>
+<p>Note too that an equality test is symmetric, but assignment is not. For example,
+if <tt class="docutils literal"><span class="pre">a</span> <span class="pre">==</span> <span class="pre">7</span></tt> then <tt class="docutils literal"><span class="pre">7</span> <span class="pre">==</span> <span class="pre">a</span></tt>. But in Python, the statement <tt class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">7</span></tt>
+is legal and <tt class="docutils literal"><span class="pre">7</span> <span class="pre">=</span> <span class="pre">a</span></tt> is not.</p>
+<p>Furthermore, in mathematics, a statement of equality is always true.  If <tt class="docutils literal"><span class="pre">a</span> <span class="pre">==</span> <span class="pre">b</span></tt>
+now, then <tt class="docutils literal"><span class="pre">a</span></tt> will always equal <tt class="docutils literal"><span class="pre">b</span></tt>. In Python, an assignment statement can make
+two variables equal, but because of the possibility of reassignment,
+they don&#8217;t have to stay that way:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>    <span class="c"># after executing this line, a and b are now equal</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c"># after executing this line, a and b are no longer equal</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The third line changes the value of <tt class="docutils literal"><span class="pre">a</span></tt> but does not change the value of
+<tt class="docutils literal"><span class="pre">b</span></tt>, so they are no longer equal. (In some programming languages, a different
+symbol is used for assignment, such as <tt class="docutils literal"><span class="pre">&lt;-</span></tt> or <tt class="docutils literal"><span class="pre">:=</span></tt>, to avoid confusion.  Python
+chose to use the tokens <tt class="docutils literal"><span class="pre">=</span></tt> for assignment, and <tt class="docutils literal"><span class="pre">==</span></tt> for equality.  This is a popular
+choice also found in languages like C, C++, Java, and C#.)</p>
+</div>
+<div class="section" id="updating-variables">
+<h2>Updating variables<a class="headerlink" href="#updating-variables" title="Permalink to this headline">¶</a></h2>
+<p>When an assignment statement is executed, the right-hand-side expression (i.e. the
+expression that comes after the assignment token) is evaluated first.  Then the result of
+that evaluation is written into the variable on the left hand side, thereby changing it.</p>
+<p>One of the most common forms of reassignment is an update, where the new
+value of the variable depends on its old value.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Line 2 means <cite>get the current value of n, multiply it by three and add one,
+and put the answer back into n as its new value</cite>.
+So after executing the two lines above, <tt class="docutils literal"><span class="pre">n</span></tt> will have the value 16.</p>
+<p>If you try to get the value of a variable that doesn&#8217;t exist yet, you&#8217;ll get an error:</p>
+<blockquote>
+<div><div class="highlight-python3"><pre>&gt;&gt;&gt; w = x + 1
+Traceback (most recent call last):
+  File "&lt;interactive input&gt;", line 1, in
+NameError: name 'x' is not defined</pre>
+</div>
+</div></blockquote>
+<p>Before you can update a variable, you have to <strong>initialize</strong> it, usually with a
+simple assignment:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This second statement &#8212; updating a variable by adding 1 to it &#8212; is very common.
+It is called an <strong>increment</strong> of the variable; subtracting 1 is called a <strong>decrement</strong>.
+Sometimes programmers also talk about <strong>bumping</strong> a variable, which means the same
+as incrementing it by 1.</p>
+</div>
+<div class="section" id="the-for-loop-revisited">
+<span id="index-2"></span><h2>The <tt class="docutils literal"><span class="pre">for</span></tt> loop revisited<a class="headerlink" href="#the-for-loop-revisited" title="Permalink to this headline">¶</a></h2>
+<p>Recall that the <tt class="docutils literal"><span class="pre">for</span></tt> loop processes each item in a list.  Each item in
+turn is (re-)assigned to the loop variable, and the body of the loop is executed.
+We saw this example in an earlier chapter:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;Joe&quot;</span><span class="p">,</span> <span class="s">&quot;Amy&quot;</span><span class="p">,</span> <span class="s">&quot;Brad&quot;</span><span class="p">,</span> <span class="s">&quot;Angelina&quot;</span><span class="p">,</span> <span class="s">&quot;Zuki&quot;</span><span class="p">,</span> <span class="s">&quot;Thandi&quot;</span><span class="p">,</span> <span class="s">&quot;Paris&quot;</span><span class="p">]:</span>
+    <span class="n">invitation</span> <span class="o">=</span> <span class="s">&quot;Hi &quot;</span> <span class="o">+</span> <span class="n">f</span> <span class="o">+</span> <span class="s">&quot;.  Please come to my party on Saturday!&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">invitation</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Running through all the items in a list is called <strong>traversing</strong> the list,
+or <strong>traversal</strong>.</p>
+<p>Let us write a function now to sum up all the elements in a list of numbers.
+Do this by hand first, and try to isolate exactly what steps you take.  You&#8217;ll
+find you need to keep some &#8220;running total&#8221; of the sum so far, either on a piece
+of paper, or in your head.  Remembering things from one step to the next is
+precisely why we have variables in a program: so we&#8217;ll need some variable
+to remember the &#8220;running total&#8221;.  It should be initialized with a value of zero,
+and then we need to traverse the items in the list.  For each item, we&#8217;ll want
+to update the running total by adding the next number to it.</p>
+<blockquote>
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mysum</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sum all the numbers in the list xs, and return the total. &quot;&quot;&quot;</span>
+    <span class="n">running_total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+        <span class="n">running_total</span> <span class="o">=</span> <span class="n">running_total</span> <span class="o">+</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">running_total</span>
+
+<span class="c">#add tests like these to your test suite ...</span>
+<span class="n">test</span><span class="p">(</span><span class="n">mysum</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]),</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">mysum</span><span class="p">([</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">]),</span> <span class="mf">5.5</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">mysum</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">mysum</span><span class="p">([</span> <span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">mysum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)),</span> <span class="mi">55</span><span class="p">)</span>    <span class="c"># 11 is not in the list.</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<span class="target" id="index-3"></span></div>
+<div class="section" id="abbreviated-assignment">
+<span id="index-4"></span><h2>Abbreviated assignment<a class="headerlink" href="#abbreviated-assignment" title="Permalink to this headline">¶</a></h2>
+<p>Incrementing a variable is so common that Python provides an abbreviated syntax
+for it:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">count</span> <span class="pre">+=</span> <span class="pre">1</span></tt> is an abreviation for <tt class="docutils literal"><span class="pre">count</span> <span class="pre">=</span> <span class="pre">count</span> <span class="pre">+</span> <span class="pre">1</span></tt> . We pronouce the operator
+as <em>&#8220;plus-equals&#8221;</em>.  The increment value does not have to be 1:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">+=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span>
+<span class="go">7</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>There are similar abbreviations for <tt class="docutils literal"><span class="pre">-=</span></tt>, <tt class="docutils literal"><span class="pre">*=</span></tt>, <tt class="docutils literal"><span class="pre">/=</span></tt>, <tt class="docutils literal"><span class="pre">//=</span></tt> and <tt class="docutils literal"><span class="pre">%=</span></tt>:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">*=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">-=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">//=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">%=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="tracing-a-program">
+<span id="index-5"></span><h2>Tracing a program<a class="headerlink" href="#tracing-a-program" title="Permalink to this headline">¶</a></h2>
+<p>To write effective computer programs a programmer needs to develop the ability
+to <strong>trace</strong> the execution of a computer program. Tracing involves becoming the
+computer and following the flow of execution through a sample program run,
+recording the state of all variables and any output the program generates after
+each instruction is executed.</p>
+<p>To understand this process, let&#8217;s trace the call to <tt class="docutils literal"><span class="pre">seq3np1(3)</span></tt> from the
+previous section. At the start of the trace, we have a local variable, <tt class="docutils literal"><span class="pre">n</span></tt>
+(the parameter), with an initial value of 3. Since 3 is not equal to 1, the
+<tt class="docutils literal"><span class="pre">while</span></tt> loop body is executed. 3 is printed and <tt class="docutils literal"><span class="pre">3</span> <span class="pre">%</span> <span class="pre">2</span> <span class="pre">==</span> <span class="pre">0</span></tt> is evaluated.
+Since it evaluates to <tt class="docutils literal"><span class="pre">False</span></tt>, the <tt class="docutils literal"><span class="pre">else</span></tt> branch is executed and
+<tt class="docutils literal"><span class="pre">3</span> <span class="pre">*</span> <span class="pre">3</span> <span class="pre">+</span> <span class="pre">1</span></tt> is evaluated and assigned to <tt class="docutils literal"><span class="pre">n</span></tt>.</p>
+<p>To keep track of all this as you hand trace a program, make a column heading on
+a piece of paper for each variable created as the program runs and another one
+for output. Our trace so far would look something like this:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">n               output printed so far</span>
+<span class="go">--              ---------------------</span>
+<span class="go">3               3,</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Since <tt class="docutils literal"><span class="pre">10</span> <span class="pre">!=</span> <span class="pre">1</span></tt> evaluates to <tt class="docutils literal"><span class="pre">True</span></tt>, the loop body is again executed,
+and 10 is printed. <tt class="docutils literal"><span class="pre">10</span> <span class="pre">%</span> <span class="pre">2</span> <span class="pre">==</span> <span class="pre">0</span></tt> is true, so the <tt class="docutils literal"><span class="pre">if</span></tt> branch is
+executed and <tt class="docutils literal"><span class="pre">n</span></tt> becomes 5. By the end of the trace we have:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">n               output printed so far</span>
+<span class="go">--              ---------------------</span>
+<span class="go">3               3,</span>
+<span class="go">10              3, 10,</span>
+<span class="go">5               3, 10, 5,</span>
+<span class="go">16              3, 10, 5, 16,</span>
+<span class="go">8               3, 10, 5, 16, 8,</span>
+<span class="go">4               3, 10, 5, 16, 8, 4,</span>
+<span class="go">2               3, 10, 5, 16, 8, 4, 2,</span>
+<span class="go">1               3, 10, 5, 16, 8, 4, 2, 1.</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Tracing can be a bit tedious and error prone (that&#8217;s why we get computers to do
+this stuff in the first place!), but it is an essential skill for a programmer
+to have. From this trace we can learn a lot about the way our code works. We
+can observe that as soon as n becomes a power of 2, for example, the program
+will require log<sub>2</sub>(n) executions of the loop body to complete. We can
+also see that the final 1 will not be printed as output within the body of the loop,
+which is why we put the special <tt class="docutils literal"><span class="pre">print</span></tt> function at the end.</p>
+<p>Tracing a program is, of course, related to single-stepping through your code
+and being able to inspect the variables. Using the computer to <strong>single-step</strong> for you is
+less error prone and more convenient.
+Also, as your programs get more complex, they might execute many millions of
+steps before they get to the code that you&#8217;re really interested in, so manual tracing
+becomes impossible.  Being able to set a <strong>breakpoint</strong> where you need
+one is far more powerful. So we strongly encourage you to invest time in
+learning using to use your programming environment (PyScripter, in these notes) to full
+effect.</p>
+<p>There are also some great visualization tools becoming available to help you
+trace and understand small fragments of Python code.  The one we recommend is at
+<a class="reference external" href="http://netserv.ict.ru.ac.za/python3_viz">http://netserv.ict.ru.ac.za/python3_viz</a></p>
+<p>We&#8217;ve cautioned
+against chatterbox functions, but used them here.  As we learn a bit more Python, we&#8217;ll
+be able to show you how to generate a list of values to hold the sequence, rather than having
+the function print them. Doing this would remove the need to have all these pesky <tt class="docutils literal"><span class="pre">print</span></tt> functions
+in the middle of our logic, and will make the function more useful.</p>
+</div>
+<div class="section" id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-algorithm">algorithm</dt>
+<dd>A step-by-step process for solving a category of problems.</dd>
+<dt id="term-body">body</dt>
+<dd>The statements inside a loop.</dd>
+<dt id="term-breakpoint">breakpoint</dt>
+<dd>A place in your program code where program execution will pause (or break),
+allowing you to inspect the state of the program&#8217;s variables, or single-step
+through individual statements, executing them one at a time.</dd>
+<dt id="term-bump">bump</dt>
+<dd>Programmer slang. Synonym for increment.</dd>
+<dt id="term-counter">counter</dt>
+<dd>A variable used to count something, usually initialized to zero and
+incremented in the body of a loop.</dd>
+<dt id="term-cursor">cursor</dt>
+<dd>An invisible marker that keeps track of where the next character will
+be printed.</dd>
+<dt id="term-decrement">decrement</dt>
+<dd>Decrease by 1.</dd>
+<dt id="term-definite-iteration">definite iteration</dt>
+<dd>A loop where we have an upper bound on the number of times the
+body will be executed.  Definite iteration is usually best coded
+as a <tt class="docutils literal"><span class="pre">for</span></tt> loop.</dd>
+<dt id="term-development-plan">development plan</dt>
+<dd>A process for developing a program. In this chapter, we demonstrated a
+style of development based on developing code to do simple, specific
+things and then encapsulating and generalizing.</dd>
+<dt id="term-encapsulate">encapsulate</dt>
+<dd>To divide a large complex program into components (like functions) and
+isolate the components from each other (by using local variables, for
+example).</dd>
+<dt id="term-escape-sequence">escape sequence</dt>
+<dd>An escape character, \, followed by one or more printable characters
+used to designate a nonprintable character.</dd>
+<dt id="term-generalize">generalize</dt>
+<dd>To replace something unnecessarily specific (like a constant value)
+with something appropriately general (like a variable or parameter).
+Generalization makes code more versatile, more likely to be reused, and
+sometimes even easier to write.</dd>
+<dt id="term-increment">increment</dt>
+<dd>Both as a noun and as a verb, increment means to increase by 1.</dd>
+<dt id="term-infinite-loop">infinite loop</dt>
+<dd>A loop in which the terminating condition is never satisfied.</dd>
+<dt id="term-indefinite-iteration">indefinite iteration</dt>
+<dd>A loop where we just need to keep going until some condition is met.
+A <tt class="docutils literal"><span class="pre">while</span></tt> statement is used for this case.</dd>
+<dt id="term-initialization-of-a-variable">initialization (of a variable)</dt>
+<dd>To initialize a variable is to give it an initial value.
+Since in Python variables don&#8217;t exist
+until they are assigned values, they are initialized when they are
+created.  In other programming languages this is not the case, and
+variables can be created without being initialized, in which case they
+have either default or <em>garbage</em> values.</dd>
+<dt id="term-iteration">iteration</dt>
+<dd>Repeated execution of a set of programming statements.</dd>
+<dt id="term-loop">loop</dt>
+<dd>A statement or group of statements that execute repeatedly until a
+terminating condition is satisfied.</dd>
+<dt id="term-loop-variable">loop variable</dt>
+<dd>A variable used as part of the terminating condition of a loop.</dd>
+<dt id="term-meta-notation">meta-notation</dt>
+<dd>Extra symbols or notation that helps describe other notation. Here we introduced
+square brackets, ellipses, italics, and bold as meta-notation to help
+describe optional, repeatable, substitutable and fixed parts of the Python syntax.</dd>
+<dt id="term-middle-test-loop">middle-test loop</dt>
+<dd>A loop that executes some of the body, then tests for the exit condition,
+and then may execute some more of the body.  We don&#8217;t have a special
+Python construct for this case, but can
+use <tt class="docutils literal"><span class="pre">while</span></tt> and <tt class="docutils literal"><span class="pre">break</span></tt> together.</dd>
+<dt id="term-nested-loop">nested loop</dt>
+<dd>A loop inside the body of another loop.</dd>
+<dt id="term-newline">newline</dt>
+<dd>A special character that causes the cursor to move to the beginning of
+the next line.</dd>
+<dt id="term-post-test-loop">post-test loop</dt>
+<dd>A loop that executes the body, then tests for the exit condition.  We don&#8217;t have a special
+Python construct for this, but can use <tt class="docutils literal"><span class="pre">while</span></tt> and <tt class="docutils literal"><span class="pre">break</span></tt> together.</dd>
+<dt id="term-pre-test-loop">pre-test loop</dt>
+<dd>A loop that tests before deciding whether the execute its body.  <tt class="docutils literal"><span class="pre">for</span></tt> and <tt class="docutils literal"><span class="pre">while</span></tt>
+are both pre-test loops.</dd>
+<dt id="term-reassignment">reassignment</dt>
+<dd>Making more than one assignment to the same variable during the
+execution of a program.</dd>
+<dt id="term-single-step">single-step</dt>
+<dd>A mode of interpreter execution where you are able to execute your
+program one step at a time, and inspect the consequences of that step.
+Useful for debugging and building your internal mental model of what is
+going on.</dd>
+<dt id="term-tab">tab</dt>
+<dd>A special character that causes the cursor to move to the next tab stop
+on the current line.</dd>
+<dt id="term-trichotomy">trichotomy</dt>
+<dd>Given any real numbers <em>a</em> and <em>b</em>, exactly one of the following
+relations holds: <em>a &lt; b</em>, <em>a &gt; b</em>, or <em>a == b</em>. Thus when you can
+establish that two of the relations are false, you can assume the
+remaining one is true.</dd>
+<dt id="term-trace">trace</dt>
+<dd>To follow the flow of execution of a program by hand, recording the
+change of state of the variables and any output produced.</dd>
+</dl>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<p>This chapter showed us how to sum a list of items,
+and how to count items.  The counting example also had an <tt class="docutils literal"><span class="pre">if</span></tt> statement
+that let us only count some selected items.  In the previous
+chapter we also showed a function <tt class="docutils literal"><span class="pre">find_first_2_letter_word</span></tt> that allowed
+us an &#8220;early exit&#8221; from inside a loop by using <tt class="docutils literal"><span class="pre">return</span></tt> when some condition occurred.
+We now also have <tt class="docutils literal"><span class="pre">break</span></tt> to exit a loop (but not the enclosing function, and
+<tt class="docutils literal"><span class="pre">continue</span></tt> to abandon the current iteration of the loop without ending the loop.</p>
+<p>Composition of list traversal, summing, counting, testing conditions
+and early exit is a rich collection of building blocks that can be combined
+in powerful ways to create many functions that are all slightly different.</p>
+<p>The first six questions are typical functions you should be able to write using only
+these building blocks.</p>
+<ol class="arabic">
+<li><p class="first">Write a function to count how many odd numbers are in a list.</p>
+</li>
+<li><p class="first">Sum up all the even numbers in a list.</p>
+</li>
+<li><p class="first">Sum up all the negative numbers in a list.</p>
+</li>
+<li><p class="first">Count how many words in a list have length 5.</p>
+</li>
+<li><p class="first">Sum all the elements in a list up to but not including the first even number.
+(Write your unit tests.  What if there is no even number?)</p>
+</li>
+<li><p class="first">Count how many words occur in a list up to and including the first occurrence of the word &#8220;sam&#8221;.
+(Write your unit tests for this case too.  What if &#8220;sam&#8221; does not occur?)</p>
+</li>
+<li><p class="first">Add a print function to Newton&#8217;s <tt class="docutils literal"><span class="pre">sqrt</span></tt> function that
+prints out <tt class="docutils literal"><span class="pre">better</span></tt> each time it is calculated. Call your modified
+function with 25 as an argument and record the results.</p>
+</li>
+<li><p class="first">Trace the execution of the last version of <tt class="docutils literal"><span class="pre">print_mult_table</span></tt> and figure
+out how it works.</p>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">print_triangular_numbers(n)</span></tt> that prints out the first
+n triangular numbers. A call to <tt class="docutils literal"><span class="pre">print_triangular_numbers(5)</span></tt> would
+produce the following output:</p>
+<div class="highlight-python"><pre>1       1
+2       3
+3       6
+4       10
+5       15</pre>
+</div>
+<p>(<em>hint: use a web search to find out what a triangular number is.</em>)</p>
+</li>
+<li><p class="first">Write a function, <tt class="docutils literal"><span class="pre">is_prime</span></tt>, which takes a single integer argument
+and returns <tt class="docutils literal"><span class="pre">True</span></tt> when the argument is a <em>prime number</em> and <tt class="docutils literal"><span class="pre">False</span></tt>
+otherwise. Add tests for cases like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">35</span><span class="p">),</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">19911129</span><span class="p">),</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The last case could represent your birth date.  Were you born on a prime day?
+In a class of 100 students, how many do you think would have prime birth dates?</p>
+</li>
+<li><p class="first">Revisit the drunk student problem from the exercises in chapter 3.
+This time, the drunk student makes a turn, and then takes some steps forward, and repeats this.
+Our social science student now records <cite>pairs</cite> of data: the angle of each turn, and the number
+of steps taken after the turn.  Her experimental data is
+[(160, 20), (-43, 10), (270, 8), (-43, 12)].  Use a turtle to draw the path taken by our drunk friend.</p>
+</li>
+<li><p class="first">Many interesting shapes can be drawn by the turtle by giving a list of pairs like we did
+above, where the first item of the pair is the angle to turn, and the second item is
+the distance to move forward.  Set up a list of pairs so that the turtle draws a
+house with a cross through the centre, as show here.
+This should be done without going over any of the lines / edges more than once,
+and without lifting your pen.</p>
+<img alt="_images/tess_house.png" src="_images/tess_house.png" />
+</li>
+<li><p class="first">Not all shapes like the one above can be drawn without lifting your pen, or going over
+an edge more than once.  Which of these can be drawn?</p>
+<img alt="_images/tess_more_houses.png" src="_images/tess_more_houses.png" />
+<p>Now read Wikipedia&#8217;s article(<a class="reference external" href="http://en.wikipedia.org/wiki/Eulerian_path">http://en.wikipedia.org/wiki/Eulerian_path</a>) about Eulerian paths.
+Learn how to tell immediately by inspection whether it is possible to find a solution or not.
+If the path is possible, you&#8217;ll also know where to put your pen to start drawing, and where
+you should end up!</p>
+</li>
+<li><p class="first">What will <tt class="docutils literal"><span class="pre">num_digits(0)</span></tt> return? Modify it to return <tt class="docutils literal"><span class="pre">1</span></tt> for this
+case. Why does a call to <tt class="docutils literal"><span class="pre">num_digits(-24)</span></tt> result in an infinite loop?
+(<em>hint: -1//10 evaluates to -1</em>)  Modify <tt class="docutils literal"><span class="pre">num_digits</span></tt> so that it works
+correctly with any integer value. Add these tests:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">num_digits</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_digits</span><span class="p">(</span><span class="o">-</span><span class="mi">12345</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">num_even_digits(n)</span></tt> that counts the number
+of even digits in <tt class="docutils literal"><span class="pre">n</span></tt>.  These tests should pass:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">123456</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">2468</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">1357</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">num_even_digits</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">sum_of_squares(xs)</span></tt> that computes the sum
+of the squares of the numbers in the list <tt class="docutils literal"><span class="pre">xs</span></tt>.  For example,
+<tt class="docutils literal"><span class="pre">sum_of_squares([2,</span> <span class="pre">3,</span> <span class="pre">4])</span></tt> should return 4+9+16 which is 29:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span><span class="p">(</span><span class="n">sum_of_squares</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]),</span> <span class="mi">29</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">sum_of_squares</span><span class="p">([</span> <span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">test</span><span class="p">(</span><span class="n">sum_of_squares</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]),</span> <span class="mi">29</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You and your friend are in a team to write a two-player game,
+human against computer, such as Tic-Tac-Toe / Noughts and Crosses.
+Your friend will write the logic to play one round of the game, while you will
+write the logic to allow many rounds of play, keep score, decide who
+plays, first, etc.  The two of you negotiate on how the two parts of the
+program will fit together, and you come up with this simple
+scaffolding (which your friend will improve later):</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># your friend will complete this function</span>
+<span class="k">def</span> <span class="nf">play_once</span><span class="p">(</span><span class="n">human_plays_first</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Must play one round of the game. If the parameter</span>
+<span class="sd">       is True, the human gets to play first, else the</span>
+<span class="sd">       computer gets to play first.  When the round ends,</span>
+<span class="sd">       the return value of the function is one of</span>
+<span class="sd">       -1 (human wins),  0 (game drawn),   1 (computer wins).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># This is all dummy scaffolding code right at the moment...</span>
+    <span class="kn">import</span> <span class="nn">random</span>                  <span class="c"># see ch 10 for details</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="c"># pick a random result between -1 and 1.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Human plays first={0},  winner={1} &quot;</span>
+                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">human_plays_first</span><span class="p">,</span> <span class="n">result</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<ol class="loweralpha simple">
+<li>Write the main program which repeatedly calls this function to play
+the game, and after each round it announces the outcome as &#8220;I win!&#8221;, &#8220;You win!&#8221;, or &#8220;Game drawn!&#8221;.
+It then asks the player &#8220;Do you want to play again?&#8221; and either plays again,
+or says &#8220;Goodbye&#8221;, and terminates.</li>
+<li>Keep score of how many wins each player has had, and how many draws there have been.
+After each round of play, also announce the scores.</li>
+<li>Add logic so that the players take turns to play first.</li>
+<li>Compute the percentage of wins for the human, out of all games played.  Also announce this
+at the end of each round.</li>
+<li>Draw a flowchart of your logic.</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

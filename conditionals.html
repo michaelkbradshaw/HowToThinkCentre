@@ -1,0 +1,911 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. Conditionals and Debugging &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="6. Recursion and the Fractal Secrets of the World" href="introRecursion.html" />
+    <link rel="prev" title="4. Creating Functions For World Domination" href="functions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introRecursion.html" title="6. Recursion and the Fractal Secrets of the World"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="4. Creating Functions For World Domination"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="conditionals-and-debugging">
+<h1>5. Conditionals and Debugging<a class="headerlink" href="#conditionals-and-debugging" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-modulus-operator">
+<span id="index-0"></span><h2>5.1. The modulus operator<a class="headerlink" href="#the-modulus-operator" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>modulus operator</strong> works on integers (and integer expressions) and gives
+the remainder when the first number is divided by the second. In Python, the
+modulus operator is a percent sign (<tt class="docutils literal"><span class="pre">%</span></tt>). The syntax is the same as for other
+operators:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">//</span> <span class="mi">3</span>     <span class="c"># This is integer division operator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span>  <span class="o">=</span> <span class="mi">7</span> <span class="o">%</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>So 7 divided by 3 is 2 with a remainder of 1.</p>
+<p>The modulus operator turns out to be surprisingly useful. For example, you can
+check whether one number is divisible by another&#8212;if <tt class="docutils literal"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">y</span></tt> is zero, then
+<tt class="docutils literal"><span class="pre">x</span></tt> is divisible by <tt class="docutils literal"><span class="pre">y</span></tt>.</p>
+<p>Also, you can extract the right-most digit or digits from a number.  For
+example, <tt class="docutils literal"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">10</span></tt> yields the right-most digit of <tt class="docutils literal"><span class="pre">x</span></tt> (in base 10).
+Similarly <tt class="docutils literal"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">100</span></tt> yields the last two digits.</p>
+<p>It is also extremely useful for doing conversions, say from seconds,
+to hours, minutes and seconds. So let&#8217;s write a program to ask the user to enter
+some seconds, and we&#8217;ll convert them into hours, minutes, and remaining seconds.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">total_secs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s">&quot;How many seconds, in total?&quot;</span><span class="p">))</span>
+<span class="n">hours</span> <span class="o">=</span> <span class="n">total_secs</span> <span class="o">//</span> <span class="mi">3600</span>
+<span class="n">secs_still_remaining</span> <span class="o">=</span> <span class="n">total_secs</span> <span class="o">%</span> <span class="mi">3600</span>
+<span class="n">minutes</span> <span class="o">=</span>  <span class="n">secs_still_remaining</span> <span class="o">//</span> <span class="mi">60</span>
+<span class="n">secs_finally_remaining</span> <span class="o">=</span> <span class="n">secs_still_remaining</span>  <span class="o">%</span> <span class="mi">60</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;Hrs=&quot;</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="s">&quot;  mins=&quot;</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span>
+                         <span class="s">&quot;secs=&quot;</span><span class="p">,</span> <span class="n">secs_finally_remaining</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="boolean-values-and-expressions">
+<span id="index-1"></span><h2>5.2. Boolean values and expressions<a class="headerlink" href="#boolean-values-and-expressions" title="Permalink to this headline">¶</a></h2>
+<p>The Python type for storing true and false values is called <tt class="docutils literal"><span class="pre">bool</span></tt>, named
+after the British mathematician, George Boole. He created <em>Boolean
+algebra</em>, which is the basis of all modern computer arithmetic.</p>
+<p>There are only two boolean values, <tt class="docutils literal"><span class="pre">True</span></tt> and <tt class="docutils literal"><span class="pre">False</span></tt>.  Capitalization
+is important, since <tt class="docutils literal"><span class="pre">true</span></tt> and <tt class="docutils literal"><span class="pre">false</span></tt> are not boolean values.</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="k">True</span><span class="p">)</span>
+<span class="go">&lt;class &#39;bool&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">true</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;interactive input&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">NameError</span>: <span class="n">name &#39;true&#39; is not defined</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>A <strong>boolean expression</strong> is an expression that evaluates to a boolean value.
+The operator <tt class="docutils literal"><span class="pre">==</span></tt> compares two values and produces a boolean value:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">5</span> <span class="o">==</span> <span class="mi">5</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">5</span> <span class="o">==</span> <span class="mi">6</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>In the first statement, the two operands are equal, so the expression evaluates
+to <tt class="docutils literal"><span class="pre">True</span></tt>; in the second statement, 5 is not equal to 6, so we get <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">==</span></tt> operator is one of six common <strong>comparison operators</strong>; the others are:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span>               <span class="c"># x is not equal to y</span>
+<span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span>                <span class="c"># x is greater than y</span>
+<span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span>                <span class="c"># x is less than y</span>
+<span class="n">x</span> <span class="o">&gt;=</span> <span class="n">y</span>               <span class="c"># x is greater than or equal to y</span>
+<span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span>               <span class="c"># x is less than or equal to y</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Although these operations are probably familiar to you, the Python symbols are
+different from the mathematical symbols. A common error is to use a single
+equal sign (<tt class="docutils literal"><span class="pre">=</span></tt>) instead of a double equal sign (<tt class="docutils literal"><span class="pre">==</span></tt>). Remember that <tt class="docutils literal"><span class="pre">=</span></tt>
+is an assignment operator and <tt class="docutils literal"><span class="pre">==</span></tt> is a comparison operator. Also, there is
+no such thing as <tt class="docutils literal"><span class="pre">=&lt;</span></tt> or <tt class="docutils literal"><span class="pre">=&gt;</span></tt>.</p>
+</div>
+<div class="section" id="logical-operators">
+<span id="index-2"></span><h2>5.3. Logical operators<a class="headerlink" href="#logical-operators" title="Permalink to this headline">¶</a></h2>
+<p>There are three <strong>logical operators</strong>: <tt class="docutils literal"><span class="pre">and</span></tt>, <tt class="docutils literal"><span class="pre">or</span></tt>, and <tt class="docutils literal"><span class="pre">not</span></tt>. The
+semantics (meaning) of these operators is similar to their meaning in English.
+For example, <tt class="docutils literal"><span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">0</span> <span class="pre">and</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">10</span></tt> is true only if <tt class="docutils literal"><span class="pre">x</span></tt> is greater than 0 <em>and</em>
+at the same time, x is less than 10.</p>
+<p><tt class="docutils literal"><span class="pre">n</span> <span class="pre">%</span> <span class="pre">2</span> <span class="pre">==</span> <span class="pre">0</span> <span class="pre">or</span> <span class="pre">n</span> <span class="pre">%</span> <span class="pre">3</span> <span class="pre">==</span> <span class="pre">0</span></tt> is true if <em>either</em> of the conditions is true,
+that is, if the number is divisible by 2 <em>or</em> divisible by 3.</p>
+<p>Finally, the <tt class="docutils literal"><span class="pre">not</span></tt> operator negates a boolean expression, so <tt class="docutils literal"><span class="pre">not(x</span> <span class="pre">&gt;</span> <span class="pre">y)</span></tt>
+is true if <tt class="docutils literal"><span class="pre">(x</span> <span class="pre">&gt;</span> <span class="pre">y)</span></tt> is false, that is, if <tt class="docutils literal"><span class="pre">x</span></tt> is less than or equal to
+<tt class="docutils literal"><span class="pre">y</span></tt>.</p>
+<span class="target" id="index-3"></span></div>
+<div class="section" id="conditional-execution">
+<span id="index-4"></span><h2>5.4. Conditional execution<a class="headerlink" href="#conditional-execution" title="Permalink to this headline">¶</a></h2>
+<p>In order to write useful programs, we almost always need the ability to check
+conditions and change the behavior of the program accordingly. <strong>Conditional
+statements</strong> give us this ability. The simplest form is the <strong>if</strong>
+statement:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot; is even.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Did you know that 2 is the only even number that is prime?&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot; is odd.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Did you know that multiplying two odd numbers &quot;</span> <span class="o">+</span>
+                                         <span class="s">&quot;always gives an odd result?&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The boolean expression after the <tt class="docutils literal"><span class="pre">if</span></tt> statement is called the <strong>condition</strong>.
+If it is true, then all the indented statements get executed. If not, then all the statements
+indented under the <cite>else</cite> clause get executed.</p>
+<div class="admonition-flowchart-of-a-if-statement-with-an-else admonition">
+<p class="first admonition-title">Flowchart of a <strong>if</strong> statement with an <strong>else</strong></p>
+<img alt="_images/flowchart_if_else.png" class="last" src="_images/flowchart_if_else.png" />
+</div>
+<p>The syntax for an <tt class="docutils literal"><span class="pre">if</span></tt> statement looks like this:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">BOOLEAN</span> <span class="n">EXPRESSION</span><span class="p">:</span>
+    <span class="n">STATEMENTS_1</span>        <span class="c"># executed if condition evaluates to True</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">STATEMENTS_2</span>        <span class="c"># executed if condition evaluates to False</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>As with the function definition from the last chapter and other compound
+statements like <tt class="docutils literal"><span class="pre">for</span></tt>, the <tt class="docutils literal"><span class="pre">if</span></tt> statement consists of a header line and a body. The header
+line begins with the keyword <tt class="docutils literal"><span class="pre">if</span></tt> followed by a <em>boolean expression</em> and ends with
+a colon (:).</p>
+<p>The indented statements that follow are called a <strong>block</strong>. The first
+unindented statement marks the end of the block.</p>
+<p>Each of the statements inside the first block of statements are executed in order if the boolean
+expression evaluates to <tt class="docutils literal"><span class="pre">True</span></tt>. The entire first block of statements
+is skipped if the boolean expression evaluates to <tt class="docutils literal"><span class="pre">False</span></tt>, and instead
+all the statements under the <tt class="docutils literal"><span class="pre">else</span></tt> clause are executed.</p>
+<p>There is no limit on the number of statements that can appear under the two clauses of an
+<tt class="docutils literal"><span class="pre">if</span></tt> statement, but there has to be at least one statement in each block.  Occasionally, it is useful
+to have a section with no statements (usually as a place keeper, or scaffolding,
+for code you haven&#8217;t written yet). In that case, you can use the <tt class="docutils literal"><span class="pre">pass</span></tt> statement, which
+does nothing except act as a placeholder.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="k">True</span><span class="p">:</span>          <span class="c"># This is always true</span>
+    <span class="k">pass</span>          <span class="c"># so this is always executed, but it does nothing</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="omitting-the-else-clause">
+<span id="index-5"></span><h2>5.5. Omitting the <cite>else</cite> clause<a class="headerlink" href="#omitting-the-else-clause" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-flowchart-of-an-if-with-no-else admonition">
+<p class="first admonition-title">Flowchart of an <strong>if</strong> with no <strong>else</strong></p>
+<img alt="_images/flowchart_if_only.png" class="last" src="_images/flowchart_if_only.png" />
+</div>
+<p>Another form of the <tt class="docutils literal"><span class="pre">if</span></tt> statement is one in which the <tt class="docutils literal"><span class="pre">else</span></tt> clause is omitted entirely.
+In this case, when the condition evaluates to <tt class="docutils literal"><span class="pre">True</span></tt>, the statements are
+executed, otherwise the flow of execution continues to the statement after the <tt class="docutils literal"><span class="pre">if</span></tt>.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;The negative number &quot;</span><span class="p">,</span>  <span class="n">x</span><span class="p">,</span> <span class="s">&quot; is not valid here.&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;I&#39;ve decided to use the number 42 instead.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;The square root of &quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;is&quot;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In this case, the print function that outputs the square root is the one after the <tt class="docutils literal"><span class="pre">if</span></tt> - not
+because we left a blank line, but because of the way the code is indented.    Note too that
+the function call <tt class="docutils literal"><span class="pre">math.sqrt(x)</span></tt> will give an error unless you have an <tt class="docutils literal"><span class="pre">import</span> <span class="pre">math</span></tt> statement,
+usually placed near the top of your script.</p>
+</div>
+<div class="section" id="chained-conditionals">
+<span id="index-6"></span><h2>5.6. Chained conditionals<a class="headerlink" href="#chained-conditionals" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes there are more than two possibilities and we need more than two
+branches. One way to express a computation like that is a <strong>chained
+conditional</strong>:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">:</span>
+    <span class="n">STATEMENTS_A</span>
+<span class="k">elif</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">:</span>
+    <span class="n">STATEMENTS_B</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">STATEMENTS_C</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Flowchart of this chained conditional</p>
+<img alt="_images/flowchart_chained_conditional.png" src="_images/flowchart_chained_conditional.png" />
+<p><tt class="docutils literal"><span class="pre">elif</span></tt> is an abbreviation of <tt class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></tt>. Again, exactly one branch will be
+executed. There is no limit of the number of <tt class="docutils literal"><span class="pre">elif</span></tt> statements but only a
+single (and optional) final <tt class="docutils literal"><span class="pre">else</span></tt> statement is allowed and it must be the last
+branch in the statement:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">&#39;a&#39;</span><span class="p">:</span>
+    <span class="n">function_a</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">&#39;b&#39;</span><span class="p">:</span>
+    <span class="n">function_b</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>
+    <span class="n">function_c</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Invalid choice.&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Each condition is checked in order. If the first is false, the next is checked,
+and so on. If one of them is true, the corresponding branch executes, and the
+statement ends. Even if more than one condition is true, only the first true
+branch executes.</p>
+</div>
+<div class="section" id="nested-conditionals">
+<span id="index-7"></span><h2>5.7. Nested conditionals<a class="headerlink" href="#nested-conditionals" title="Permalink to this headline">¶</a></h2>
+<p>One conditional can also be <strong>nested</strong> within another. (It is the same theme of
+composibility, again!)  We could have written
+the previous example as follows:</p>
+<div class="admonition-flowchart-of-this-nested-conditional admonition">
+<p class="first admonition-title">Flowchart of this nested conditional</p>
+<img alt="_images/flowchart_nested_conditional.png" class="last" src="_images/flowchart_nested_conditional.png" />
+</div>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">:</span>
+    <span class="n">STATEMENTS_A</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">:</span>
+        <span class="n">STATEMENTS_B</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">STATEMENTS_C</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The outer conditional contains two branches.
+The second branch contains another <tt class="docutils literal"><span class="pre">if</span></tt> statement, which
+has two branches of its own. Those two branches could contain
+conditional statements as well.</p>
+<p>Although the indentation of the statements makes the structure apparent, nested
+conditionals very quickly become difficult to read.  In general, it is a good
+idea to avoid them when you can.</p>
+<p>Logical operators often provide a way to simplify nested conditional
+statements. For example, we can rewrite the following code using a single
+conditional:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>            <span class="c"># assume x is an int here</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s">&quot;x is a positive single digit.&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The <tt class="docutils literal"><span class="pre">print</span></tt> function is called only if we make it past both the
+conditionals, so we can use the <tt class="docutils literal"><span class="pre">and</span></tt> operator:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;x is a positive single digit.&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="the-return-statement">
+<span id="index-8"></span><h2>5.8. The <tt class="docutils literal"><span class="pre">return</span></tt> statement<a class="headerlink" href="#the-return-statement" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">return</span></tt> statement, with or without a value, depending on whether the
+function is fruitful or not, allows you to terminate the execution of a function
+before you reach the end. One reason to use it is if you detect an error
+condition:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">print_square_root</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Positive numbers only, please.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;The square root of&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;is&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The function <tt class="docutils literal"><span class="pre">print_square_root</span></tt> has a parameter named <tt class="docutils literal"><span class="pre">x</span></tt>. The first thing
+it does is check whether <tt class="docutils literal"><span class="pre">x</span></tt> is less than or equal to 0, in which case it
+displays an error message and then uses <tt class="docutils literal"><span class="pre">return</span></tt> to exit the function. The
+flow of execution immediately returns to the caller, and the remaining lines of
+the function are not executed.</p>
+</div>
+<div class="section" id="boolean-functions">
+<h2>5.9. Boolean functions<a class="headerlink" href="#boolean-functions" title="Permalink to this headline">¶</a></h2>
+<p>Functions can return boolean values, which is often convenient for hiding
+complicated tests inside functions. For example:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">is_divisible</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">False</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The name of this function is <tt class="docutils literal"><span class="pre">is_divisible</span></tt>. It is common to give <strong>boolean
+functions</strong> names that sound like yes/no questions.  <tt class="docutils literal"><span class="pre">is_divisible</span></tt> returns
+either <tt class="docutils literal"><span class="pre">True</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt> to indicate whether the <tt class="docutils literal"><span class="pre">x</span></tt> is or is not
+divisible by <tt class="docutils literal"><span class="pre">y</span></tt>.</p>
+<p>We can make the function more concise by taking advantage of the fact that the
+condition of the <tt class="docutils literal"><span class="pre">if</span></tt> statement is itself a boolean expression. We can return
+it directly, avoiding the <tt class="docutils literal"><span class="pre">if</span></tt> statement altogether:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">is_divisible</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This session shows the new function in action:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">is_divisible</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_divisible</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Boolean functions are often used in conditional statements:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">is_divisible</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="o">...</span> <span class="c"># do something ...</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="o">...</span> <span class="c"># do something else ...</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>It might be tempting to write something like:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">is_divisible</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="k">True</span><span class="p">:</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>but the extra comparison is unnecessary.</p>
+</div>
+<div class="section" id="type-conversion">
+<span id="index-9"></span><h2>5.10. Type conversion<a class="headerlink" href="#type-conversion" title="Permalink to this headline">¶</a></h2>
+<p>We&#8217;ve had a first look at this in an earlier chapter.  Seeing it again won&#8217;t hurt!</p>
+<p>Many Python types comes with a built-in function that attempts to convert values
+of another type into its own type. The <tt class="docutils literal"><span class="pre">int(ARGUMENT)</span></tt> function, for example,
+takes any value and converts it to an integer, if possible, or complains
+otherwise:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="s">&quot;32&quot;</span><span class="p">)</span>
+<span class="go">32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="go">ValueError: invalid literal for int() with base 10: &#39;Hello&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">int</span></tt> can also convert floating-point values to integers, but remember
+that it truncates the fractional part:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3</span><span class="p">)</span>
+<span class="go">-2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="mf">3.99999</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="s">&quot;42&quot;</span><span class="p">)</span>
+<span class="go">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <tt class="docutils literal"><span class="pre">float(ARGUMENT)</span></tt> function converts integers and strings to floating-point
+numbers:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="go">32.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="s">&quot;3.14159&quot;</span><span class="p">)</span>
+<span class="go">3.14159</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>It may seem odd that Python distinguishes the integer value <tt class="docutils literal"><span class="pre">1</span></tt> from the
+floating-point value <tt class="docutils literal"><span class="pre">1.0</span></tt>. They may represent the same number, but they
+belong to different types. The reason is that they are represented differently
+inside the computer.</p>
+<p>The <tt class="docutils literal"><span class="pre">str(ARGUMENT)</span></tt> function converts any argument given to it to type
+<tt class="docutils literal"><span class="pre">string</span></tt>:</p>
+<blockquote>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="go">&#39;32&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="mf">3.14149</span><span class="p">)</span>
+<span class="go">&#39;3.14149&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="k">True</span><span class="p">)</span>
+<span class="go">&#39;True&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">true</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;interactive input&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">NameError</span>: <span class="n">name &#39;true&#39; is not defined</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">str(ARGUMENT)</span></tt> will work with any value and convert it into a string.  As
+mentioned earlier, <tt class="docutils literal"><span class="pre">True</span></tt> is boolean value; <tt class="docutils literal"><span class="pre">true</span></tt> is not.</p>
+</div>
+<div class="section" id="debugging">
+<span id="index-10"></span><h2>5.11. Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="debugging-with-print">
+<h3>5.11.1. Debugging with <tt class="docutils literal"><span class="pre">print</span></tt><a class="headerlink" href="#debugging-with-print" title="Permalink to this headline">¶</a></h3>
+<p>A powerful technique for debugging, is to insert extra <tt class="docutils literal"><span class="pre">print</span></tt> functions
+in carefully selected places in your code.  Then, by inspecting the output
+of the program, you can check whether the algorithm is doing what you expect
+it to.  Be clear about the following, however:</p>
+<ul>
+<li><p class="first">You must have a clear solution to the problem, and must know what should
+happen before you can debug a program.  Work on <em>solving</em> the problem
+on a piece of paper (perhaps using a flowchart to record the steps you take)
+<em>before</em> you concern yourself with
+writing code.  Writing a program doesn&#8217;t solve the problem &#8212; it simply <em>automates</em>
+the manual steps you would take. So first make sure you have
+a pen-and-paper manual solution that works.
+Programming then is about making those manual steps happen automatically.</p>
+</li>
+<li><p class="first">Do not write <strong>chatterbox</strong> functions.  A chatterbox is a fruitful
+function that, in addition to its primary task, also asks the user for input,
+or prints output, when it would be more useful
+if it simply shut up and did its work quietly.</p>
+<p>For example, we&#8217;ve seen built-in functions like <tt class="docutils literal"><span class="pre">range</span></tt>,
+<tt class="docutils literal"><span class="pre">max</span></tt> and <tt class="docutils literal"><span class="pre">abs</span></tt>.  None of these would be useful building blocks for other
+programs if they prompted the user for input, or printed their results while
+they performed their tasks.</p>
+<p>So a good tip is to avoid calling <tt class="docutils literal"><span class="pre">print</span></tt> and <tt class="docutils literal"><span class="pre">input</span></tt> functions inside
+fruitful functions, <em>unless the primary purpose of your function is to
+perform input and output</em>.  The one exception
+to this rule might be to temporarily sprinkle some calls to <tt class="docutils literal"><span class="pre">print</span></tt> into
+your code to help debug and understand what is happening when the code runs,
+but these will then be removed once you get things working.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="unit-testing">
+<h2>5.12. Unit testing<a class="headerlink" href="#unit-testing" title="Permalink to this headline">¶</a></h2>
+<p>It is a common best practice in software development these days to include
+automatic <strong>unit testing</strong> of source code. Unit testing provides a way to
+automatically verify that individual pieces of code, such as functions, are
+working properly. This makes it possible to change the implementation of a
+function at a later time and quickly test that it still does what it was
+intended to do.</p>
+<p>Unit testing also forces the programmer to think about the different cases
+that the function needs to handle.  You also only have to type the tests once
+into the script, rather than having to keep entering the same test data over
+and over as you develop your code.</p>
+<p>Extra code in your program which is there because it makes debugging or testing
+easier is called <strong>scaffolding</strong>.</p>
+<p>A collection of tests for some code is called its <strong>test suite</strong>.</p>
+<p>There are a few different preferred ways to do unit testing in Python &#8212;
+but at this stage we&#8217;re going to ignore what the Python community usually does,
+and we&#8217;re going to start with two functions that we&#8217;ll write ourselves.
+We&#8217;ll use these for writing our unit tests.</p>
+<p>Let&#8217;s start with the <tt class="docutils literal"><span class="pre">absolute_value</span></tt> function that we wrote earlier in this
+chapter.  Recall that we wrote a few different versions, the last of which was
+incorrect, and had a bug. Would tests have caught this bug?</p>
+<p>First we plan our tests.  We&#8217;d like to know
+if the function returns the correct value when its argument is negative,
+or when its argument is positive, or when its argument is zero.  When
+planning your tests, you&#8217;ll always want to think carefully about the &#8220;edge&#8221; cases &#8212;
+here, an argument of 0 to <tt class="docutils literal"><span class="pre">absolute_value</span></tt> is on the edge of where the function
+behaviour changes, and as we saw at the beginning of the chapter, it is an easy
+spot for the programmer to make a mistake!  So it is a good case to include in
+our test suite.</p>
+<p>We&#8217;re going to write a helper function for checking the results of one test.  It
+takes two arguments &#8212; the actual value that was
+returned from the computation, and the value we expected to get.
+It compares these, and will either print
+a message telling us that the test passed, or it will print a message to
+inform us that the test failed.  The first two lines of the body (after
+the function&#8217;s docstring) can be copied to your own code as they are here:
+they import a module called <tt class="docutils literal"><span class="pre">sys</span></tt>, and extract the caller&#8217;s
+line number from the stack frame.  This allows us to print the line number
+of the test, which will help when we want to fix any tests that fail.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Compare the actual to the expected value,</span>
+<span class="sd">        and print a suitable message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">linenum</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">f_lineno</span>   <span class="c"># get the caller&#39;s line number.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">expected</span> <span class="o">==</span> <span class="n">actual</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Test on line {0} passed.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">linenum</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;Test on line {0} failed. Expected &#39;{1}&#39;, but got &#39;{2}&#39;.&quot;</span>
+                                     <span class="o">.</span> <span class="nb">format</span><span class="p">(</span><span class="n">linenum</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>There is also some slightly tricky string formatting using the <tt class="docutils literal"><span class="pre">format</span></tt> method
+which we will gloss over for the moment, and cover in detail in a future chapter.
+But with this function written, we can proceed to construct our test suite:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">test_suite</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Run the suite of tests for code in this module (this file).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">absolute_value</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span> <span class="mi">17</span><span class="p">)</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">absolute_value</span><span class="p">(</span><span class="o">-</span><span class="mi">17</span><span class="p">),</span> <span class="mi">17</span><span class="p">)</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">absolute_value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">absolute_value</span><span class="p">(</span><span class="mf">3.14</span><span class="p">),</span> <span class="mf">3.14</span><span class="p">)</span>
+    <span class="n">test</span><span class="p">(</span><span class="n">absolute_value</span><span class="p">(</span><span class="o">-</span><span class="mf">3.14</span><span class="p">),</span> <span class="mf">3.14</span><span class="p">)</span>
+
+<span class="n">test_suite</span><span class="p">()</span>        <span class="c"># and here is the call to run the tests</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Here you&#8217;ll see that we&#8217;ve constructed five tests in our test suite.  We could run this
+against the first or second versions (the correct versions) of <tt class="docutils literal"><span class="pre">absolute_value</span></tt>,
+and we&#8217;d get output similar to the following:</p>
+<blockquote>
+<div><div class="highlight-pycon"><div class="highlight"><pre><span class="go">Test on line 24 passed.</span>
+<span class="go">Test on line 25 passed.</span>
+<span class="go">Test on line 26 passed.</span>
+<span class="go">Test on line 27 passed.</span>
+<span class="go">Test on line 28 passed.</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>But let&#8217;s say you change the function to an incorrect version like this:</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">absolute_value</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>   <span class="c"># Buggy version</span>
+    <span class="sd">&quot;&quot;&quot; Compute the absolute value of n &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Can you find at least two mistakes in this code?  Running our test suite we get:</p>
+<div class="highlight-python"><pre>Test on line 24 passed.
+Test on line 25 failed. Expected '17', but got '1'.
+Test on line 26 failed. Expected '0', but got 'None'.
+Test on line 27 passed.
+Test on line 28 failed. Expected '3.14', but got '1'.</pre>
+</div>
+<p>These are three examples of <em>failing tests</em>.</p>
+</div>
+<div class="section" id="glossary">
+<h2>5.13. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-block">block</dt>
+<dd>A group of consecutive statements with the same indentation.</dd>
+<dt id="term-body">body</dt>
+<dd>The block of statements in a compound statement that follows the
+header.</dd>
+<dt id="term-boolean-expression">boolean expression</dt>
+<dd>An expression that is either true or false.</dd>
+<dt id="term-boolean-value">boolean value</dt>
+<dd>There are exactly two boolean values: <tt class="docutils literal"><span class="pre">True</span></tt> and <tt class="docutils literal"><span class="pre">False</span></tt>. Boolean
+values result when a boolean expression is evaluated by the Python
+interepreter.  They have type <tt class="docutils literal"><span class="pre">bool</span></tt>.</dd>
+<dt id="term-branch">branch</dt>
+<dd>One of the possible paths of the flow of execution determined by
+conditional execution.</dd>
+<dt id="term-chained-conditional">chained conditional</dt>
+<dd>A conditional branch with more than two possible flows of execution. In
+Python chained conditionals are written with <tt class="docutils literal"><span class="pre">if</span> <span class="pre">...</span> <span class="pre">elif</span> <span class="pre">...</span> <span class="pre">else</span></tt>
+statements.</dd>
+<dt id="term-comparison-operator">comparison operator</dt>
+<dd>One of the operators that compares two values: <tt class="docutils literal"><span class="pre">==</span></tt>, <tt class="docutils literal"><span class="pre">!=</span></tt>, <tt class="docutils literal"><span class="pre">&gt;</span></tt>,
+<tt class="docutils literal"><span class="pre">&lt;</span></tt>, <tt class="docutils literal"><span class="pre">&gt;=</span></tt>, and <tt class="docutils literal"><span class="pre">&lt;=</span></tt>.</dd>
+<dt id="term-condition">condition</dt>
+<dd>The boolean expression in a conditional statement that determines which
+branch is executed.</dd>
+<dt id="term-conditional-statement">conditional statement</dt>
+<dd>A statement that controls the flow of execution depending on some
+condition. In Python the keywords <tt class="docutils literal"><span class="pre">if</span></tt>, <tt class="docutils literal"><span class="pre">elif</span></tt>, and <tt class="docutils literal"><span class="pre">else</span></tt> are
+used for conditional statements.</dd>
+<dt id="term-logical-operator">logical operator</dt>
+<dd>One of the operators that combines boolean expressions: <tt class="docutils literal"><span class="pre">and</span></tt>,
+<tt class="docutils literal"><span class="pre">or</span></tt>, and <tt class="docutils literal"><span class="pre">not</span></tt>.</dd>
+<dt id="term-modulus-operator">modulus operator</dt>
+<dd>An operator, denoted with a percent sign ( <tt class="docutils literal"><span class="pre">%</span></tt>), that works on
+integers and yields the remainder when one number is divided by
+another.</dd>
+<dt id="term-nesting">nesting</dt>
+<dd>One program structure within another, such as a conditional statement
+inside a branch of another conditional statement.</dd>
+<dt id="term-prompt">prompt</dt>
+<dd>A visual cue that tells the user to input data.</dd>
+<dt id="term-type-conversion">type conversion</dt>
+<dd>An explicit function call that takes a value of one type and computes a
+corresponding value of another type.</dd>
+<dt id="term-wrapping-code-in-a-function">wrapping code in a function</dt>
+<dd>The process of adding a function header and parameters to a sequence
+of program statements is often refered to as &#8220;wrapping the code in
+a function&#8221;.  This process is very useful whenever the program
+statements in question are going to be used multiple times.  It is
+even more useful when it allows the programmer to express their mental
+chunking, and how they&#8217;ve broken a complex problem into pieces.</dd>
+</dl>
+</div>
+<div class="section" id="exercises">
+<h2>5.14. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Evaluate the following numerical expressions in your head, then use
+the Python interpreter to check your results:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">5</span> <span class="pre">%</span> <span class="pre">2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">9</span> <span class="pre">%</span> <span class="pre">5</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">15</span> <span class="pre">%</span> <span class="pre">12</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">12</span> <span class="pre">%</span> <span class="pre">15</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">6</span> <span class="pre">%</span> <span class="pre">6</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">0</span> <span class="pre">%</span> <span class="pre">7</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">7</span> <span class="pre">%</span> <span class="pre">0</span></tt></li>
+</ol>
+</div></blockquote>
+<p>What happened with the last example? Why? If you were able to correctly
+anticipate the computer&#8217;s response in all but the last one, it is time to
+move on. If not, take time now to make up examples of your own. Explore the
+modulus operator until you are confident you understand how it works.</p>
+</li>
+<li><p class="first">You look at the clock and it is exactly 2pm.  You set an alarm to go off
+in 51 hours.  At what time does the alarm go off?</p>
+</li>
+<li><p class="first">Write a Python program to solve the general version of the above problem.
+Ask the user for the time now (in hours), and ask for the number of hours to wait.
+Your program should output what the time will be on the clock when the alarm goes off.</p>
+</li>
+<li><p class="first">Assume the days of the week are numbered 0,1,2,3,4,5,6 from Sunday to Saturday.
+Write a function which is given the day number, and it returns the day name (a string).</p>
+</li>
+<li><p class="first">You go on a wonderful holiday (perhaps to jail, if you don&#8217;t like happy exercises)
+leaving on day number 3 (a Wednesday).  You return home after 137 sleeps.
+Write a general version of the program which asks for the starting day number, and
+the length of your stay, and it will tell you the name of day of the week you will return on.</p>
+</li>
+<li><p class="first">Give the logical opposites of these conditions</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">b</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">a</span> <span class="pre">&gt;=</span> <span class="pre">b</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">a</span> <span class="pre">&gt;=</span> <span class="pre">18</span>&nbsp; <span class="pre">and</span>&nbsp; <span class="pre">day</span> <span class="pre">==</span> <span class="pre">3</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">a</span> <span class="pre">&gt;=</span> <span class="pre">18</span>&nbsp; <span class="pre">and</span>&nbsp; <span class="pre">day</span> <span class="pre">!=</span> <span class="pre">3</span></tt></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">What do these expressions evaluate to?</p>
+<ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">3</span> <span class="pre">==</span> <span class="pre">3</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">3</span> <span class="pre">!=</span> <span class="pre">3</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">3</span> <span class="pre">&gt;=</span> <span class="pre">4</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">not</span> <span class="pre">(3</span> <span class="pre">&lt;</span> <span class="pre">4)</span></tt></li>
+</ol>
+</li>
+<li><p class="first">Write a function which is given an exam mark, and it returns a string &#8212; the grade for that mark &#8212; according to this
+scheme:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="37%" />
+<col width="63%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><p class="first last">Mark</p>
+</th>
+<th class="head"><p class="first last">Grade</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">&gt;= 75</p>
+</td>
+<td><p class="first last">First</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">[70-75)</p>
+</td>
+<td><p class="first last">Upper Second</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">[60-70)</p>
+</td>
+<td><p class="first last">Second</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">[50-60)</p>
+</td>
+<td><p class="first last">Third</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">[45-50)</p>
+</td>
+<td><p class="first last">F1 Supp</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">[40-45)</p>
+</td>
+<td><p class="first last">F2</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">&lt; 40</p>
+</td>
+<td><p class="first last">F3</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The square and round brackets denote closed and open intervals.
+A closed interval includes the number, and open interval excludes it.   So 39.99999 gets grade F3, but 40 gets grade F2.
+Assume</p>
+<div class="highlight-python"><pre>xs = [83, 75, 74.9, 70, 69.9, 65, 60, 59.9, 55, 50,
+                     49.9, 45, 44.9, 40, 39.9, 2, 0</pre>
+</div>
+<p>Test your function by printing the mark and the grade for all the elements in this list.</p>
+</li>
+<li><p class="first">Modify the turtle bar chart program so that the pen is up for the small gaps between each bar.</p>
+</li>
+<li><p class="first">Modify the turtle bar chart program so that the bar for any value
+of 200 or more is filled with red, values between [100 and 200) are filled with yellow,
+and bars representing values less than 100 are filled with green.</p>
+</li>
+<li><p class="first">In the turtle bar chart program, what do you expect to happen if one or more
+of the data values in the list is negative?   Try it out.  Change the
+program so that when it prints the text value for the negative bars, it puts
+the text below the bottom of the bar.</p>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">find_hypot</span></tt> which, given the length of two sides of a right-angled triangle, returns
+the length of the hypotenuse.  (Hint:  <tt class="docutils literal"><span class="pre">x</span> <span class="pre">**</span> <span class="pre">0.5</span></tt> will return the square root.)</p>
+</li>
+<li><p class="first">Write a function <tt class="docutils literal"><span class="pre">is_rightangled</span></tt> which, given the length of three sides of a triangle,
+will determine whether the triangle is right-angled.  Assume that the third argument to the
+function is always the longest side.  It will return <tt class="docutils literal"><span class="pre">True</span></tt> if the triangle
+is right-angled, or <tt class="docutils literal"><span class="pre">False</span></tt> otherwise.</p>
+<p>Hint: floating point arithmetic is not always exactly accurate,
+so it is not safe to test floating point numbers for equality.
+If a good programmer wants to know whether
+<tt class="docutils literal"><span class="pre">x</span></tt> is equal or close enough to <tt class="docutils literal"><span class="pre">y</span></tt>, they would probably code it up as</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="k">if</span>  <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.000001</span><span class="p">:</span>    <span class="c"># if x is approximately equal to y</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Extend the above program so that the sides can be given to the function in any order.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introRecursion.html" title="6. Recursion and the Fractal Secrets of the World"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="4. Creating Functions For World Domination"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

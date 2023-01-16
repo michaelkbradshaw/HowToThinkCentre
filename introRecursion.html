@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. Recursion and the Fractal Secrets of the World &mdash; How to Think Like a Computer Scientist: Learning with Python 3 (HAN)</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3rd Edition-HAN',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="How to Think Like a Computer Scientist: Learning with Python 3 (HAN)" href="index.html" />
+    <link rel="next" title="7. Sequence and For Each Loops" href="sequencesAndForEach.html" />
+    <link rel="prev" title="5. Conditionals and Debugging" href="conditionals.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sequencesAndForEach.html" title="7. Sequence and For Each Loops"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="conditionals.html" title="5. Conditionals and Debugging"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="recursion-and-the-fractal-secrets-of-the-world">
+<h1>6. Recursion and the Fractal Secrets of the World<a class="headerlink" href="#recursion-and-the-fractal-secrets-of-the-world" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="stack-diagrams">
+<span id="index-0"></span><h2>6.1. Stack Diagrams<a class="headerlink" href="#stack-diagrams" title="Permalink to this headline">¶</a></h2>
+<p>We have seen that it is possible for one function to call another, but we have not explained the mechanism for how this is possible.  Let us start with some example code of one function calling another function.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="k">def</span> <span class="nf">print_twice</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="n">param</span><span class="p">,</span> <span class="n">param</span>
+
+
+<span class="k">def</span> <span class="nf">cat_twice</span><span class="p">(</span><span class="n">part1</span><span class="p">,</span> <span class="n">part2</span><span class="p">):</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">part1</span> <span class="o">+</span> <span class="n">part2</span>
+    <span class="n">print_twice</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>
+
+
+<span class="n">chant1</span> <span class="o">=</span> <span class="s">&quot;Pie Jesu domine, &quot;</span>
+<span class="n">chant2</span> <span class="o">=</span> <span class="s">&quot;Dona eis requim.&quot;</span>
+<span class="n">cat_twice</span><span class="p">(</span><span class="n">chant1</span><span class="p">,</span> <span class="n">chant2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can represent how the underlying computer is storing information using a <strong>stack diagram</strong>.  Like state diagrams, stack diagrams show the value of each variable, but they also show the function to which each variable belongs.</p>
+<p>Each function is represented by a <strong>frame</strong>. A frame is a box with the name of a function beside it and the parameters and variables of the function inside it. The stack diagram for the previous example looks like this:</p>
+<img alt="Stack diagram" src="_images/stack.png" />
+<p>The order of the stack shows the flow of execution. <tt class="docutils literal"><span class="pre">print_twice</span></tt> was called by <tt class="docutils literal"><span class="pre">cat_twice</span></tt>, and <tt class="docutils literal"><span class="pre">cat_twice</span></tt> was called by <tt class="docutils literal"><span class="pre">__main__</span></tt>, which is a special name for the topmost function. When you create a variable outside of any function, it belongs to <tt class="docutils literal"><span class="pre">__main__</span></tt>.</p>
+<p>Each parameter refers to the same value as its corresponding argument.  So, <tt class="docutils literal"><span class="pre">part1</span></tt> has the same value as <tt class="docutils literal"><span class="pre">chant1</span></tt>, <tt class="docutils literal"><span class="pre">part2</span></tt> has the same value as <tt class="docutils literal"><span class="pre">chant2</span></tt>, and <tt class="docutils literal"><span class="pre">param</span></tt> has the same value as <tt class="docutils literal"><span class="pre">cat</span></tt>. If an error occurs during a function call, Python prints the name of the function, and the name of the function that called it, and the name of the function that called <em>that</em>, all the way back to the top most function.</p>
+<p>To see how this works, create a Python script named <tt class="docutils literal"><span class="pre">tryme2.py</span></tt> that looks like this:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="k">def</span> <span class="nf">print_twice</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="n">param</span><span class="p">,</span> <span class="n">param</span>
+    <span class="nb">print</span> <span class="n">cat</span>
+
+
+<span class="k">def</span> <span class="nf">cat_twice</span><span class="p">(</span><span class="n">part1</span><span class="p">,</span> <span class="n">part2</span><span class="p">):</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">part1</span> <span class="o">+</span> <span class="n">part2</span>
+    <span class="n">print_twice</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>
+
+<span class="n">chant1</span> <span class="o">=</span> <span class="s">&quot;Pie Jesu domine, &quot;</span>
+<span class="n">chant2</span> <span class="o">=</span> <span class="s">&quot;Dona eis requim.&quot;</span>
+<span class="n">cat_twice</span><span class="p">(</span><span class="n">chant1</span><span class="p">,</span> <span class="n">chant2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We&#8217;ve added the statement, <tt class="docutils literal"><span class="pre">print</span> <span class="pre">cat</span></tt> inside the <tt class="docutils literal"><span class="pre">print_twice</span></tt> function,
+but <tt class="docutils literal"><span class="pre">cat</span></tt> is not defined there. Running this script will produce an error
+message like this:</p>
+<div class="highlight-python"><pre>Traceback (innermost last):
+  File "tryme2.py", line 11, in &lt;module&gt;
+    cat_twice(chant1, chant2)
+  File "tryme2.py", line 7, in cat_twice
+    print_twice(cat)
+  File "tryme2.py", line 3, in print_twice
+    print cat
+NameError: global name 'cat' is not defined</pre>
+</div>
+<p>This list of functions is called a <strong>traceback</strong>. It tells you what program
+file the error occurred in, and what line, and what functions were executing at
+the time. It also shows the line of code that caused the error.</p>
+<p>Notice the similarity between the traceback and the stack diagram.  It&#8217;s not a coincidence. In fact, another common name for a traceback is a <em>stack trace</em>.</p>
+</div>
+<div class="section" id="recursion">
+<h2>6.2. Recursion<a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
+<p>What might be surprising is that we can also write functions that call themselves.  This technique is called <strong>recursion</strong>.  Recursion is the first of several techniques that allows us to introduce repetition into our programs.  Examine the following code that will print out 3 cheers.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">cheers</span><span class="p">(</span><span class="n">times</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;provides times number of cheers&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="n">times</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>  <span class="c"># base case, no cheers left</span>
+        <span class="k">return</span>
+
+    <span class="nb">print</span> <span class="p">(</span><span class="s">&quot;Hip Hip Hooray!!&quot;</span><span class="p">)</span>
+    <span class="n">cheers</span><span class="p">(</span><span class="n">times</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="n">cheers</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The computer will create new frame for each function call, even when the call is to the same function.  Each frame keeps its own copy of the values for each variable.  This is why the value of <tt class="docutils literal"><span class="pre">times</span></tt> will eventually become 0.</p>
+<blockquote>
+<div><img alt="the stack trace for the cheers function" src="_images/cheers_trace.png" />
+</div></blockquote>
+</div>
+<div class="section" id="recursion-requirements">
+<h2>6.3. Recursion Requirements<a class="headerlink" href="#recursion-requirements" title="Permalink to this headline">¶</a></h2>
+<p>To properly use recursion you must provide two things in your algorithm.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>A <strong>base case</strong> that can be answered immediately.</li>
+<li>A recursion call to a smaller version of the problem.</li>
+</ol>
+</div></blockquote>
+<p>The second requirement whittles away the problem by making it smaller and smaller.  The base case ensures that the function will eventually stop.  Without the base case, a recursion call would repeat until the computer ran out memory.  This is called an <strong>infinite recursion</strong>.</p>
+<p>In the <tt class="docutils literal"><span class="pre">cheers()</span></tt> function, the base case is when <tt class="docutils literal"><span class="pre">times==0</span></tt>.  If the caller of the function wants 0 cheers, there is no work to do.  We can stop immediately.  Note that we used <tt class="docutils literal"><span class="pre">time&lt;=0</span></tt>.  This is a safety measure.  If the function was called with an argument  less than 0, it would trigger an infinite recursion.</p>
+<p>In the <tt class="docutils literal"><span class="pre">cheers()</span></tt> function, line 8 contains the recursion call.  This is where we make the bigger problem (cheering 3 times) into a smaller problem (cheering 2 times).  Note that the only &#8220;real work&#8221; is done on line 7 where we print out one cheer.  One useful way to thing of the cheers algorithms is that we cheer once, and then make a recursive call to cheer for the remaining times.  It is only by following the stack diagram that we see why this is a legal way to solve the problem.</p>
+<div class="admonition-recursion-the-high-level-view admonition">
+<p class="first admonition-title">Recursion, the high-level view</p>
+<p>One way to think about this is to convince yourself that the function
+works correctly when you call it for the base case.  Then do
+a mental <em>leap of faith</em>, saying <em>&#8220;the fairy godmother</em> (or Python, if
+you can think of Python as your fairy godmother) <em>knows how to
+handle the recursive level, so
+I don&#8217;t need to think about that detail!&#8221;</em>  All I need to focus on
+is how to solve a problem for <tt class="docutils literal"><span class="pre">n=1</span></tt> <em>if I can assume the base case
+is already working.</em></p>
+<p>You&#8217;re practicing <em>mental abstraction</em> &#8212; ignoring the subproblem
+while you solve the big problem.</p>
+<p>If this mode of thinking works (and you should practice it!), then take
+it to the next level.  Aha! now can I see that it will work when called
+for <tt class="docutils literal"><span class="pre">n=2</span></tt> <em>under the assumption that it is already working for level 1</em>.</p>
+<p>And, in general, if I can assume the <tt class="docutils literal"><span class="pre">n-1</span></tt> case works, can I just
+solve the level <tt class="docutils literal"><span class="pre">n</span></tt> problem?</p>
+<p class="last">Students of mathematics who have played with proofs of induction should
+see some very strong similarities here.</p>
+</div>
+</div>
+<div class="section" id="recursion-for-repetition">
+<h2>6.4. Recursion for Repetition<a class="headerlink" href="#recursion-for-repetition" title="Permalink to this headline">¶</a></h2>
+<p>One of the most common things to do with repetition is to repeat an operation a particular number of times, or to perform an operation  with a set of consecutive numbers (i.e. from 1 to 10).</p>
+<p>Lets create a recursive function called <tt class="docutils literal"><span class="pre">countDown(num)</span></tt> that prints off the numbers from <tt class="docutils literal"><span class="pre">num</span></tt> to 1 each on one line.  Since we are using recursion, we need to identify the base case and how to make the count down problem smaller.  The base case is usually the easiest to identify.  If <tt class="docutils literal"><span class="pre">num</span></tt> is less than 1, we are done.</p>
+<p>Determining how to make the problem smaller is usually more difficult.  This is because you must usually think of how to define the problem in terms of itself.  That is we should start by believing that the function <tt class="docutils literal"><span class="pre">countDown(num)</span></tt> already works.  In this case if I want to count down, I can print off <tt class="docutils literal"><span class="pre">num</span></tt> and make a recursion call to print off the remaining <tt class="docutils literal"><span class="pre">num-1</span></tt> numbers.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">countDown</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;prints down the numbers from num to 1 &quot;&quot;&quot;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="nb">print</span> <span class="n">num</span>           <span class="c"># print my number</span>
+    <span class="n">countDown</span><span class="p">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>    <span class="c"># Call the recursion</span>
+
+
+<span class="n">countDown</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Recursion is very sensitivity to the order in which operations are conducted.  Lets look at an example.  Lets create a recursive function called <tt class="docutils literal"><span class="pre">countUp(num)</span></tt> that prints off the numbers from 1 to <tt class="docutils literal"><span class="pre">num</span></tt>.
+The base case is similar to the previous problem. If <tt class="docutils literal"><span class="pre">num</span></tt> is less than 1, we are done.</p>
+<p>If I want to count up, I need to first print off the lower numbers using a recursion call <tt class="docutils literal"><span class="pre">countUp(num)</span></tt> and then print off my own number.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">countUp</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;prints down the numbers from num to 1 &quot;&quot;&quot;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="n">countUp</span><span class="p">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>    <span class="c">#call the recursion before</span>
+    <span class="nb">print</span> <span class="n">num</span>         <span class="c">#I print my number</span>
+
+
+<span class="n">countUp</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>We can see that the code for <tt class="docutils literal"><span class="pre">countDown()</span></tt> and <tt class="docutils literal"><span class="pre">countUp()</span></tt> differ only in that Lines 7-8 are swapped.  If we examine the stack diagram, we can see that the stack does not end until <tt class="docutils literal"><span class="pre">num==0</span></tt>.  It is only on the way back down the stack that the printing starts.</p>
+<blockquote>
+<div><img alt="countup recursion stack 1" src="_images/countUpRec1.png" />
+</div></blockquote>
+<p>No output has occurred yet.</p>
+<blockquote>
+<div><img alt="countup recursion stack 2" src="_images/countUpRec2.png" />
+</div></blockquote>
+<p>Output starts and frames are removed</p>
+<blockquote>
+<div><img alt="countup recursion stack 3" src="_images/countUpRec3.png" />
+</div></blockquote>
+</div>
+<div class="section" id="recursion-in-math">
+<h2>6.5. Recursion in Math<a class="headerlink" href="#recursion-in-math" title="Permalink to this headline">¶</a></h2>
+<p>Several well known mathematical functions are defined recursively. <a class="reference external" href="http://en.wikipedia.org/wiki/Factorial">Factorial</a>, for example, is given the special
+operator, <tt class="docutils literal"><span class="pre">!</span></tt>, and is defined by:</p>
+<div class="highlight-python"><pre>0! = 1
+n! = n(n-1)</pre>
+</div>
+<p>We can easily code this into Python:</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We can see another behavior in the summation of number from 1 to n.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">n</span><span class="o">+</span><span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; sums the numbers from 1 to n &quot;&quot;&quot;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">):</span>
+       <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="k">return</span>  <span class="n">n</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="case-study-fibonacci-numbers">
+<span id="index-1"></span><h3>6.5.1. Case study: Fibonacci numbers<a class="headerlink" href="#case-study-fibonacci-numbers" title="Permalink to this headline">¶</a></h3>
+<p>The famous <strong>Fibonacci sequence</strong> 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 134, ... was devised by
+Fibonacci (1170-1250), who used this to model the breeding of (pairs) of rabbits.
+If, in generation 7 you had 21 pairs in total, of which 13 were adults,
+then next generation the adults will all have bred new children,
+and the previous children will have grown up to become adults.
+So in generation 8 you&#8217;ll have 13+21=34, of which 21 are adults.</p>
+<p>This <em>model</em> to explain rabbit breeding made the simplifying assumption that rabbits never died.
+Scientists often make (unrealistic) simplifying assumptions and restrictions
+to make some headway with the problem.</p>
+<p>If we number the terms of the sequence from 0, we can describe each term recursively
+as the sum of the previous two terms:</p>
+<div class="highlight-python"><pre>fib(0) = 0
+fib(1) = 1
+fib(n) = fib(n-1) + fib(n-2)  for n &gt;= 2</pre>
+</div>
+<p>This translates very directly into some Python:</p>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is a particularly inefficient algorithm, and we&#8217;ll show one way of fixing it when we learn about other looping structures:</p>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">time</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s">&#39;fib({0}) = {1}, ({2:.2f} secs)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>We get the correct result, but an exploding amount of work!</p>
+<div class="highlight-python"><pre>fib(35) = 9227465, (10.54 secs)</pre>
+</div>
+</div>
+</div>
+<div class="section" id="recursion-in-nature">
+<h2>6.6. Recursion in Nature<a class="headerlink" href="#recursion-in-nature" title="Permalink to this headline">¶</a></h2>
+<p>There is an important application of recursion found in nature called a <strong>fractal</strong>.   Fractals are patterns which display self similarity at different levels of magnification.  For instance the &#8220;roughness&#8221; of a coastline from space, on a map, or from a plane will be the same.  This self-similarity can also be seen in living things like the shapes of the leaves on ferns, mountain ranges, waves, and clouds.  Many of the special effects that we see in movies make use of fractal patterns in order to create realistic effects.</p>
+<p>Why is this the case?  In physical phenomena, like the self-similar appearance of mountain ranges, patterns are created by natural erosive  processes that are applied over and over again to alter the landscape.  This is very similar to recursion, where the base case is the starting state and the recursion is the application and reapplication of the erosive forces of nature.</p>
+<p>Biological fractals are formed from the way that genes are expressed in living things.  Each gene is like a function that commands an organism to create a biological structure.  As a gene is expressed over and over again,  fractal structures are formed.  Eventually, regulatory elements of the organism will stop expressing the genes, a base case.</p>
+</div>
+<div class="section" id="drawing-fractals">
+<h2>6.7. Drawing Fractals<a class="headerlink" href="#drawing-fractals" title="Permalink to this headline">¶</a></h2>
+<p>We will wrap up this chapter with drawing fractals using pygame.  There are many, many ways to create fractals but we will only focus on 2 sets of  (orthogonal) techniques.  One set of techniques handles the recursion stopping condition. The other set of techniques handles when the picture is drawn.</p>
+<div class="section" id="sierpinski-triangle">
+<h3>6.7.1. Sierpinski Triangle<a class="headerlink" href="#sierpinski-triangle" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><img alt="Image of the Sierpinski Triangle" src="_images/sierpinkski.png" />
+</div></blockquote>
+<p>For our first example we will recreate Sierpinski&#8217;s triangle.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="k">def</span> <span class="nf">calcMidPoint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; for 2-tuples a and b, this returns the 2-tuple that lies between them &quot;&quot;&quot;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span><span class="o">/</span><span class="mf">2.0</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">drawTri</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;draws a triangle with points a,b,c and color, col&quot;&quot;&quot;</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">sierpinskiDepth</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">depth</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;draws a Sierpinski triangle with depth, depth, at points a,b,c&quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span><span class="p">(</span><span class="n">depth</span> <span class="o">&lt;=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">drawTri</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c">#calc midpoints</span>
+        <span class="n">ab</span> <span class="o">=</span> <span class="n">calcMidPoint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">ac</span> <span class="o">=</span> <span class="n">calcMidPoint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">bc</span> <span class="o">=</span> <span class="n">calcMidPoint</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">sierpinskiDepth</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">ab</span><span class="p">,</span><span class="n">ac</span><span class="p">,</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sierpinskiDepth</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">ab</span><span class="p">,</span><span class="n">bc</span><span class="p">,</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sierpinskiDepth</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">ac</span><span class="p">,</span><span class="n">bc</span><span class="p">,</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">winS</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">600</span><span class="p">,</span><span class="mi">400</span><span class="p">))</span>
+    <span class="n">sierpinskiDepth</span><span class="p">(</span><span class="n">winS</span><span class="p">,</span><span class="n">RED</span><span class="p">,(</span><span class="mi">300</span><span class="p">,</span><span class="mi">50</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">350</span><span class="p">),(</span><span class="mi">600</span><span class="p">,</span><span class="mi">350</span><span class="p">),</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">winS</span><span class="p">,</span><span class="s">&quot;siepinkski.png&quot;</span><span class="p">)</span>
+    <span class="n">WAIT</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s">&quot;press any key to close...&quot;</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In keeping with good design, common elements have been placed in helper functions.  <tt class="docutils literal"><span class="pre">calcMidpoints()</span></tt> finds the mid point of points a and b.   <tt class="docutils literal"><span class="pre">drawTri()</span></tt> provides a convenience call to draw.polygon.  The bulk of the work is in the <tt class="docutils literal"><span class="pre">sierpinskiDepth()</span></tt> function.  As it is a recursive function, we have two parts to contend with: the base case and making the problem smaller.</p>
+<p>The base case is conducted with the use of the depth parameter. Depth is decremented for each additional call.  Eventually, depth will be 0 and the recursion will stop.  This is very similar to the <tt class="docutils literal"><span class="pre">countDown()</span></tt> function we created at the beginning of the chapter.  Once the end of the recursion is reached, a triangle is drawn.</p>
+<p>The recursive part is different from what we saw previously.  At each recursion, <tt class="docutils literal"><span class="pre">sierpinskiDepth()</span></tt> makes three calls.  Each call describes a smaller triangle, as seen below.</p>
+<blockquote>
+<div><img alt="Image of the Degree One Sierpinski Triangle" src="_images/sierpinkski_degree_one.png" />
+</div></blockquote>
+<p>Our previous code requires the caller to set the depth to which the recursion will run.   Our next code segment makes a slight alteration to allow the recursion itself to figure out when there is not need to continue.  In this case, when the resulting triangles are so small they cannot be drawn effectively.  There is no reason to continue recursion, it will produce no visual benefit.  This also means that no matter how big the original triangle is, the detail will be as fine as the resolution of the screen will allow.</p>
+<p>To enable this to happen we have added one helper function <tt class="docutils literal"><span class="pre">calcDistance()</span></tt>.  Then we created a new function called
+<tt class="docutils literal"><span class="pre">sierpinskiDist()</span></tt> which is very similar to <tt class="docutils literal"><span class="pre">sierpinskiDepth()</span></tt>.  The changes are the lack of depth as a parameter and the stopping conditions for the recursion on lines 12-13.</p>
+<blockquote>
+<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">calcDistance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; returns the distance between two points &quot;&quot;&quot;</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**.</span><span class="mi">5</span>
+
+
+<span class="k">def</span> <span class="nf">sierpinskiDist</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;draws a Sierpinski triangle with best resolution at points a,b,c&quot;&quot;&quot;</span>
+
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">calcDistance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>         <span class="c">#this is the difference</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">):</span>                    <span class="c">#Don&#39;t go farther that you need to.</span>
+        <span class="n">drawTri</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c">#calc midpoints</span>
+        <span class="n">ab</span> <span class="o">=</span> <span class="n">calcMidPoint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">ac</span> <span class="o">=</span> <span class="n">calcMidPoint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">bc</span> <span class="o">=</span> <span class="n">calcMidPoint</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">sierpinskiDist</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">ab</span><span class="p">,</span><span class="n">ac</span><span class="p">)</span>
+        <span class="n">sierpinskiDist</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">ab</span><span class="p">,</span><span class="n">bc</span><span class="p">)</span>
+        <span class="n">sierpinskiDist</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">ac</span><span class="p">,</span><span class="n">bc</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="fractal-balls">
+<h3>6.7.2. Fractal Balls<a class="headerlink" href="#fractal-balls" title="Permalink to this headline">¶</a></h3>
+<p>In the Sierpinski Triangle we only draw in the base case.  Our next example demonstrates a fractal in which we draw for every level of recursion.  This example uses the radius of the balls to determine the stopping condition.  We pass the angle from the center, the distance from the center, and how big the ball should be as parameters.  Each recursion call draws two circles across from each other.  You might want to brush up on your trigonometry if you want to follow this code in detail.</p>
+<div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">drawCircle</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">color</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">radius</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; draws a bordered circle &quot;&quot;&quot;</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">color</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">radius</span><span class="p">)</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">surface</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">pos</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fractalDraw</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">color</span><span class="p">,</span><span class="n">midX</span><span class="p">,</span><span class="n">midY</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">dist</span><span class="p">,</span><span class="n">radius</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;draws a fractal pattern&quot;&quot;&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">radius</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="c">#calculate new values for the next recursion call</span>
+    <span class="n">newAngle</span> <span class="o">=</span> <span class="n">angle</span><span class="o">+</span><span class="n">radius</span><span class="o">*.</span><span class="mi">01</span>
+    <span class="n">newDist</span> <span class="o">=</span> <span class="n">dist</span><span class="o">+</span><span class="n">radius</span><span class="o">*.</span><span class="mi">23</span>
+    <span class="n">newRadius</span> <span class="o">=</span> <span class="n">radius</span><span class="o">*.</span><span class="mi">965</span>
+    <span class="c">#draw the smaller balls first</span>
+    <span class="n">fractalDraw</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">color</span><span class="p">,</span><span class="n">midX</span><span class="p">,</span><span class="n">midY</span><span class="p">,</span><span class="n">newAngle</span><span class="p">,</span><span class="n">newDist</span><span class="p">,</span><span class="n">newRadius</span><span class="p">)</span>
+
+    <span class="c">#calculate the position of the balls</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dist</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dist</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+    <span class="n">drawCircle</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">color</span><span class="p">,(</span><span class="n">midX</span><span class="o">+</span><span class="n">x</span><span class="p">,</span><span class="n">midY</span><span class="o">+</span><span class="n">y</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">drawCircle</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span><span class="n">color</span><span class="p">,(</span><span class="n">midX</span><span class="o">-</span><span class="n">x</span><span class="p">,</span><span class="n">midY</span><span class="o">-</span><span class="n">y</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">winS</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">600</span><span class="p">,</span><span class="mi">600</span><span class="p">))</span>
+
+    <span class="n">fractalDraw</span><span class="p">(</span><span class="n">winS</span><span class="p">,</span><span class="n">RED</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">winS</span><span class="p">,</span><span class="s">&quot;fractal_balls.png&quot;</span><span class="p">)</span>
+    <span class="n">WAIT</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s">&quot;press any key to close...&quot;</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<img alt="_images/fractal_balls.png" src="_images/fractal_balls.png" />
+<p>This fractal code is very sensitive.  A simple change of the constances on lines 15-17 can produce radically different images like the one seem below.  Can you find the needed values to replicate this image?</p>
+<img alt="_images/fractal_balls2.png" src="_images/fractal_balls2.png" />
+</div>
+</div>
+<div class="section" id="glossary">
+<h2>6.8. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-base-case">base case</dt>
+<dd>A branch of the conditional statement in a recursive function that does
+not give rise to further recursive calls.</dd>
+<dt id="term-infinite-recursion">infinite recursion</dt>
+<dd>A function that calls itself recursively without ever reaching any base
+case. Eventually, infinite recursion causes a runtime error.</dd>
+<dt id="term-recursion">recursion</dt>
+<dd>The process of calling a function that is already executing.</dd>
+<dt id="term-recursive-call">recursive call</dt>
+<dd>The statement that calls an already executing function.  Recursion can
+also be indirect &#8212; function <cite>f</cite> can call <cite>g</cite> which calls <cite>h</cite>,
+and <cite>h</cite> could make a call back to <cite>f</cite>.</dd>
+<dt id="term-recursive-definition">recursive definition</dt>
+<dd>A definition which defines something in terms of itself. To be useful
+it must include <em>base cases</em> which are not recursive. In this way it
+differs from a <em>circular definition</em>.  Recursive definitions often
+provide an elegant way to express complex data structures, like a directory
+that can contain other directories, or a menu that can contain other menus.</dd>
+</dl>
+</div>
+<div class="section" id="exercises">
+<h2>6.9. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sequencesAndForEach.html" title="7. Sequence and For Each Loops"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="conditionals.html" title="5. Conditionals and Debugging"
+             >previous</a> |</li>
+        <li><a href="index.html">How to Think Like a Computer Scientist: Learning with Python 3</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2012, Michael K. Bradshaw, Peter Wentworth, Jeffrey Elkner, Allen B. Downey and Chris Meyers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
