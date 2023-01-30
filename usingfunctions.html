@@ -133,7 +133,7 @@ the inputs.</p>
 <blockquote>
 <div><div class="highlight-python3"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">( pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">) )</span>
 <span class="go">81.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">( pow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">) )</span>
 <span class="go">64.0</span>
 </pre></div>
 </div>
@@ -211,7 +211,7 @@ many functions from a particular module, we can load all of the
 functions using the wildcard <tt class="docutils literal"><span class="pre">*</span></tt> in place of the function.  It would
 look like this: <tt class="docutils literal"><span class="pre">form</span> <span class="pre">math</span> <span class="pre">import</span> <span class="pre">*</span></tt>.</p>
 <blockquote>
-<div><div class="highlight-python3"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span>
+<div><div class="highlight-python3"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">*</span>
 <span class="nb">print</span> <span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="nb">print</span> <span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="nb">print</span> <span class="n">ceil</span><span class="p">(</span><span class="mf">45.6</span><span class="p">)</span>
