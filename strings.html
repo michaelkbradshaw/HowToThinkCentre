@@ -205,25 +205,7 @@ Python code out on the Internet that will use this trick, so it is best to know 
 <p>A lot of computations involve processing a string one character at a time.
 Often they start at the beginning, select each character in turn, do something
 to it, and continue until the end. This pattern of processing is called a
-<strong>traversal</strong>. One way to encode a traversal is with a <tt class="docutils literal"><span class="pre">while</span></tt> statement:</p>
-<blockquote>
-<div><div class="highlight-python3"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">while</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">fruit</span><span class="p">):</span>
-    <span class="n">letter</span> <span class="o">=</span> <span class="n">fruit</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span>
-    <span class="n">ix</span> <span class="o">+=</span> <span class="mi">1</span>
-</pre></div>
-</td></tr></table></div>
-</div></blockquote>
-<p>This loop traverses the string and displays each letter on a line by itself.
-The loop condition is <tt class="docutils literal"><span class="pre">ix</span> <span class="pre">&lt;</span> <span class="pre">len(fruit)</span></tt>, so when <tt class="docutils literal"><span class="pre">ix</span></tt> is equal to the
-length of the string, the condition is false, and the body of the loop is not
-executed. The last character accessed is the one with the index
-<tt class="docutils literal"><span class="pre">len(fruit)-1</span></tt>, which is the last character in the string.</p>
+<strong>traversal</strong>.
 <p>But we&#8217;ve previously seen how the <tt class="docutils literal"><span class="pre">for</span></tt> loop can easily iterate over lists: <tt class="docutils literal"><span class="pre">for</span></tt>
 also works for strings:</p>
 <blockquote>
